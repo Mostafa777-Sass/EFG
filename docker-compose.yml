@@ -1,0 +1,36 @@
+services:
+  # One-off job: applies database migrations and seeds missing content, then exits.
+  migrate:
+    build:
+      context: .
+      target: build
+    user: "1001:1001"
+    env_file: .env
+    environment:
+      DATABASE_URL: file:/data/egf.db
+      UPLOAD_DIR: /data/uploads
+    command: sh -c "node node_modules/prisma/build/index.js migrate deploy && node prisma/seed.mjs"
+    volumes:
+      - egf_data:/data
+
+  web:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: file:/data/egf.db
+      UPLOAD_DIR: /data/uploads
+    ports:
+      # Only reachable from the VPS itself; Nginx terminates TLS and proxies here.
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - egf_data:/data
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  # Holds the SQLite database and uploaded images. Back this up.
+  egf_data:

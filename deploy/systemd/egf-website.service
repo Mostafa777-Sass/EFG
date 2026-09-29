@@ -1,0 +1,33 @@
+# systemd unit for running the EGF website without Docker.
+# Install: sudo cp deploy/systemd/egf-website.service /etc/systemd/system/
+#          sudo systemctl daemon-reload && sudo systemctl enable --now egf-website
+# Adjust WorkingDirectory, User and the node path to your server.
+
+[Unit]
+Description=Egypt Gas Fittings website (Next.js)
+After=network.target
+
+[Service]
+Type=simple
+User=egf
+Group=egf
+WorkingDirectory=/var/www/egf-website
+# Reads DATABASE_URL, UPLOAD_DIR, SMTP_* and the rest from the project's .env
+EnvironmentFile=/var/www/egf-website/.env
+Environment=NODE_ENV=production
+Environment=PORT=3000
+# Only Nginx on this machine needs to reach the app.
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/usr/bin/node .next/standalone/server.js
+Restart=always
+RestartSec=5
+# Give in-flight requests time to finish on restart.
+TimeoutStopSec=30
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/www/egf-website/data
+
+[Install]
+WantedBy=multi-user.target

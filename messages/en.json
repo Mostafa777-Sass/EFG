@@ -1,0 +1,284 @@
+{
+  "meta": {
+    "siteName": "Egypt Gas Fittings",
+    "defaultTitle": "Egypt Gas Fittings | Precision gas fittings made to British Standards",
+    "description": "EGF manufactures brass and stainless steel gas fittings and accessories to British Standards in Badr Industrial Zone, Cairo. ISO 9001 certified, supplying Egypt's natural gas distribution companies and export markets."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products",
+    "capabilities": "Capabilities",
+    "quality": "Quality",
+    "clients": "Clients",
+    "facility": "Facility",
+    "contact": "Contact",
+    "requestQuote": "Request a quote",
+    "menu": "Open menu",
+    "close": "Close menu",
+    "mainNavigation": "Main navigation"
+  },
+  "topbar": {
+    "certified": "ISO 9001 certified manufacturer",
+    "switchLocale": "العربية"
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "viewAll": "View all products",
+    "viewProducts": "View products",
+    "contactUs": "Contact us",
+    "readMore": "Read more",
+    "back": "Back",
+    "size": "Size",
+    "standard": "Standard",
+    "material": "Material",
+    "category": "Category",
+    "all": "All",
+    "established": "Established",
+    "location": "Location",
+    "noImage": "Image coming soon"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Connecting a safer tomorrow",
+      "ctaProducts": "Explore products",
+      "ctaQuote": "Request a quote",
+      "badge": "ISO 9001 certified",
+      "badgeSub": "Badr Industrial Zone, Cairo",
+      "imageAlt": "EGF brass gas fittings, meter connectors and flexible hoses"
+    },
+    "pillars": {
+      "quality": {
+        "title": "Reliable quality",
+        "text": "Every fitting is checked against British Standard specifications before it is released."
+      },
+      "precision": {
+        "title": "Precision manufacturing",
+        "text": "CNC and transfer-line machining hold tight tolerances on bores, threads and sealing faces."
+      },
+      "safety": {
+        "title": "Safer communities",
+        "text": "Leak-tight joints and dependable performance in the homes and networks we supply."
+      }
+    },
+    "stats": {
+      "units": "Units produced in {year}",
+      "founded": "Year established",
+      "partners": "Distribution partners",
+      "standards": "British Standards applied"
+    },
+    "products": {
+      "eyebrow": "Our products",
+      "title": "Fittings and accessories for every gas connection",
+      "intro": "Brass, stainless steel and nickel-plated steel fittings manufactured to British Standard dimensions and thread forms."
+    },
+    "capabilities": {
+      "eyebrow": "Capabilities",
+      "title": "Precision from raw material to finished part",
+      "intro": "One integrated production floor with CNC machining, automated welding and in-house corrugated hose forming.",
+      "cta": "See our capabilities"
+    },
+    "quality": {
+      "eyebrow": "Quality & standards",
+      "title": "Quality built into the process",
+      "intro": "Certified management systems, recognised standards and a dedicated quality control laboratory.",
+      "cta": "Quality & standards"
+    },
+    "clients": {
+      "eyebrow": "Clients & partners",
+      "title": "Trusted by Egypt's gas distribution network",
+      "intro": "Ongoing supply to licensed natural gas distribution companies, and export to the UAE.",
+      "cta": "Our clients"
+    },
+    "facility": {
+      "eyebrow": "Our facility",
+      "title": "Inside the Badr Industrial Zone plant",
+      "cta": "Tour the facility"
+    },
+    "cta": {
+      "button": "Get in touch",
+      "call": "Call us"
+    }
+  },
+  "about": {
+    "eyebrow": "About EGF",
+    "title": "History & overview",
+    "leadership": "Leadership",
+    "vision": "Our vision",
+    "mission": "Our mission",
+    "facts": "Key facts",
+    "established": "Established",
+    "location": "Location",
+    "locationValue": "Badr Industrial Zone, Cairo",
+    "certification": "Certification",
+    "certificationValue": "ISO 9001 · EOS · EGAS registered",
+    "export": "Export reach",
+    "exportValue": "UAE (Sharjah) and international markets",
+    "vat": "VAT registration",
+    "units": "Units produced in {year}"
+  },
+  "products": {
+    "eyebrow": "Products & services",
+    "title": "Our products",
+    "filterAll": "All products",
+    "filterLabel": "Filter by category",
+    "empty": "No products found in this category yet.",
+    "requestQuote": "Request a quote for this product",
+    "specifications": "Specifications",
+    "related": "Related products",
+    "backToProducts": "All products",
+    "servicesTitle": "Products & services",
+    "services": {
+      "standard": {
+        "title": "Manufacturing to standard",
+        "text": "Every product is produced according to British Standard specifications."
+      },
+      "export": {
+        "title": "Export & logistics",
+        "text": "Packaging and logistics support for shipments to export markets, including the UAE (Sharjah)."
+      },
+      "distribution": {
+        "title": "Distribution supply",
+        "text": "Ongoing supply to Egypt's licensed natural gas distribution companies, at production volume."
+      }
+    }
+  },
+  "capabilities": {
+    "eyebrow": "Capabilities & technology",
+    "title": "Capabilities & technology",
+    "technologiesTitle": "Production technology",
+    "technologies": {
+      "cnc": {
+        "title": "CNC technology",
+        "text": "Removes manual variation from the dimensions that matter most on a gas fitting: bores, threads and sealing faces, for tight tolerances batch after batch."
+      },
+      "welding": {
+        "title": "TIG, laser & CO2 welding",
+        "text": "Automated welding lines produce the clean, consistent, leak-tight seams that gas-carrying joints require, at full production scale."
+      },
+      "transfer": {
+        "title": "Transfer machines",
+        "text": "Carries each fitting through several machining operations in one continuous cycle: fast, repeatable and high-volume."
+      },
+      "hose": {
+        "title": "Corrugated hose line",
+        "text": "Forms stainless steel corrugated flexible hoses and expansion bellows to a controlled pitch, for consistent flexibility and fatigue life."
+      }
+    },
+    "capacity": "Production capacity",
+    "export": "Export reach",
+    "processEyebrow": "Manufacturing facilities",
+    "processTitle": "One integrated production floor",
+    "steps": {
+      "1": {
+        "title": "Material intake & inspection",
+        "text": "Brass, stainless steel and nickel-plated steel stock is received and checked before it enters production."
+      },
+      "2": {
+        "title": "Machining: CNC & transfer lines",
+        "text": "Fitting bodies and components are machined on CNC and transfer machine lines for tight, repeatable tolerances."
+      },
+      "3": {
+        "title": "Welding & forming",
+        "text": "TIG, laser and CO2 automatic welding join and shape components into finished fittings."
+      },
+      "4": {
+        "title": "Hose & bellow forming",
+        "text": "A dedicated line produces stainless steel corrugated flexible hoses and expansion bellows in-house."
+      },
+      "5": {
+        "title": "Quality inspection",
+        "text": "Finished fittings are checked against British Standard specifications before they are approved for release."
+      },
+      "6": {
+        "title": "Packaging & dispatch",
+        "text": "Approved products are packaged and prepared for delivery to local distributors and export markets."
+      }
+    },
+    "integrated": {
+      "title": "Integrated production",
+      "text": "Machining, welding and hose-forming all take place in-house, with no subcontracted manufacturing steps."
+    },
+    "everyStage": {
+      "title": "Quality at every stage",
+      "text": "Incoming material, in-process and final checks are built into the production flow."
+    }
+  },
+  "quality": {
+    "eyebrow": "Quality & standards",
+    "title": "Quality & standards",
+    "certifications": "Certifications & approvals",
+    "standardsTitle": "British Standards applied across the product range",
+    "testingTitle": "Testing capabilities",
+    "lab": "Quality control lab",
+    "labAlt": "EGF quality control laboratory",
+    "tests": {
+      "sample": "Sample preparation",
+      "pressure": "Pressure & leak testing",
+      "tensile": "Load & tensile testing",
+      "pneumatic": "Pneumatic testing",
+      "chemical": "Chemical resistance",
+      "pull": "Hose pull testing"
+    }
+  },
+  "clients": {
+    "eyebrow": "Clients & partners",
+    "title": "Our clients & partners",
+    "domestic": "Domestic distribution partners",
+    "domesticText": "Ongoing supply to Egypt's licensed natural gas distribution companies nationwide.",
+    "export": "Export markets",
+    "exportText": "Products exported beyond Egypt, including to the UAE (Sharjah)."
+  },
+  "facility": {
+    "eyebrow": "Our facility",
+    "title": "Our facility",
+    "address": "EGF facility",
+    "viewLarger": "View larger image",
+    "close": "Close"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Get in touch",
+    "details": "Contact details",
+    "phone": "Phone",
+    "mobile": "Mobile",
+    "fax": "Fax",
+    "email": "Email",
+    "address": "Address",
+    "website": "Website",
+    "formTitle": "Send an inquiry",
+    "formIntro": "Tell us what you need and we will come back to you.",
+    "name": "Full name",
+    "company": "Company",
+    "emailField": "Email address",
+    "phoneField": "Phone number",
+    "country": "Country",
+    "product": "Product of interest",
+    "productNone": "General inquiry",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send inquiry",
+    "sending": "Sending…",
+    "successTitle": "Thank you",
+    "success": "Your inquiry has been received. We will respond shortly.",
+    "sendAnother": "Send another inquiry",
+    "error": "Something went wrong. Please try again or email us directly.",
+    "required": "Required",
+    "mapTitle": "EGF location map"
+  },
+  "footer": {
+    "about": "Manufacturer and exporter of gas connection fittings and accessories to British and international standards.",
+    "quickLinks": "Quick links",
+    "products": "Products",
+    "contact": "Contact",
+    "rights": "All rights reserved.",
+    "certified": "ISO 9001 & EOS certified",
+    "vat": "VAT reg.",
+    "admin": "Admin"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has moved.",
+    "home": "Back to home"
+  }
+}

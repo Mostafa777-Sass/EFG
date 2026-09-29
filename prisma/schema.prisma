@@ -1,0 +1,182 @@
+// EGF website data model.
+// SQLite by default (one file on disk). To move to PostgreSQL later:
+//   1. change `provider` below to "postgresql"
+//   2. point DATABASE_URL at the Postgres server
+//   3. delete prisma/migrations and run `pnpm prisma migrate dev --name init`
+// No application code needs to change.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Admin access
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Catalogue
+// ---------------------------------------------------------------------------
+
+model Category {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  nameEn        String
+  nameAr        String?
+  descriptionEn String?
+  descriptionAr String?
+  sortOrder     Int       @default(0)
+  products      Product[]
+}
+
+model Product {
+  id                 String    @id @default(cuid())
+  slug               String    @unique
+  nameEn             String
+  nameAr             String?
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  sizes              String?
+  standard           String?
+  material           String?
+  shortDescriptionEn String?
+  shortDescriptionAr String?
+  descriptionEn      String?
+  descriptionAr      String?
+  imageUrl           String?
+  featured           Boolean   @default(false)
+  published          Boolean   @default(true)
+  sortOrder          Int       @default(0)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  inquiries          Inquiry[]
+}
+
+// ---------------------------------------------------------------------------
+// Company content
+// ---------------------------------------------------------------------------
+
+model Client {
+  id         String  @id @default(cuid())
+  nameEn     String
+  nameAr     String?
+  logoUrl    String?
+  /// DOMESTIC or EXPORT
+  type       String  @default("DOMESTIC")
+  country    String?
+  websiteUrl String?
+  sortOrder  Int     @default(0)
+  published  Boolean @default(true)
+}
+
+model FacilityPhoto {
+  id        String  @id @default(cuid())
+  titleEn   String
+  titleAr   String?
+  captionEn String?
+  captionAr String?
+  imageUrl  String
+  sortOrder Int     @default(0)
+  published Boolean @default(true)
+}
+
+model Certification {
+  id            String  @id @default(cuid())
+  nameEn        String
+  nameAr        String?
+  issuerEn      String?
+  issuerAr      String?
+  descriptionEn String?
+  descriptionAr String?
+  imageUrl      String?
+  sortOrder     Int     @default(0)
+  published     Boolean @default(true)
+}
+
+/// Editable paragraphs used by the public pages (hero text, vision, mission ...).
+model ContentBlock {
+  key       String  @id
+  label     String
+  group     String  @default("general")
+  textEn    String
+  textAr    String?
+  multiline Boolean @default(true)
+  sortOrder Int     @default(0)
+}
+
+/// Single-row table (id = 1).
+model SiteSettings {
+  id                Int      @id @default(1)
+  companyNameEn     String   @default("Egypt Gas Fittings")
+  companyNameAr     String   @default("مصر لوصلات الغاز")
+  taglineEn         String?
+  taglineAr         String?
+  phone1            String?
+  phone2            String?
+  mobile1           String?
+  mobile2           String?
+  fax               String?
+  email             String?
+  whatsapp          String?
+  addressEn         String?
+  addressAr         String?
+  mapEmbedUrl       String?
+  foundedYear       Int?
+  unitsProduced     String?
+  unitsProducedYear Int?
+  vatNumber         String?
+  /// One standard per line, shown on the Quality page.
+  standards         String?
+  arabicEnabled     Boolean  @default(false)
+  facebookUrl       String?
+  linkedinUrl       String?
+  /// Where new inquiry notifications are emailed (needs SMTP env vars).
+  notifyEmail       String?
+  updatedAt         DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Inbound inquiries from the contact form
+// ---------------------------------------------------------------------------
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  email     String
+  phone     String?
+  country   String?
+  subject   String?
+  message   String
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  locale    String   @default("en")
+  /// NEW, IN_PROGRESS or CLOSED
+  status    String   @default("NEW")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
