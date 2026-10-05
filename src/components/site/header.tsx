@@ -5,8 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { NAV_ITEMS } from "@/lib/constants";
 import { telHref } from "@/lib/utils";
 import { Logo } from "./logo";
-import { NavLinks } from "./nav-links";
-import { MobileNav } from "./mobile-nav";
+import { SiteNav } from "./site-nav";
 import { LocaleSwitcher } from "./locale-switcher";
 
 export async function Header({ settings }: { settings: SiteSettings }) {
@@ -16,7 +15,8 @@ export async function Header({ settings }: { settings: SiteSettings }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-mist-200 bg-white/95 backdrop-blur">
-      <div className="hidden bg-navy-900 text-xs text-white/85 md:block">
+      {/* Contact strip from 1024px up; below that phones and tablets get a single bar with the menu toggle. */}
+      <div className="hidden bg-navy-900 text-xs text-white/85 lg:block">
         <div className="container-x flex h-9 items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             {settings.phone1 && (
@@ -43,22 +43,20 @@ export async function Header({ settings }: { settings: SiteSettings }) {
       </div>
 
       <div className="container-x flex h-20 items-center justify-between gap-6">
-        <Logo idPrefix="hdr" />
-        <nav className="hidden items-center gap-1 lg:flex" aria-label={t("mainNavigation")}>
-          <NavLinks items={items} />
-        </nav>
-        <div className="flex items-center gap-3">
+        <Logo />
+        {/* One navigation element: the menu-toggle panel below 1024px, the inline link row from 1024px up. */}
+        <SiteNav
+          items={items}
+          label={t("mainNavigation")}
+          quoteLabel={t("requestQuote")}
+          menuLabel={t("menu")}
+          closeLabel={t("close")}
+          localeLabel={settings.arabicEnabled ? tb("switchLocale") : null}
+        >
           <Link href="/contact" className="btn-primary btn-sm hidden md:inline-flex">
             {t("requestQuote")}
           </Link>
-          <MobileNav
-            items={items}
-            quoteLabel={t("requestQuote")}
-            menuLabel={t("menu")}
-            closeLabel={t("close")}
-            localeLabel={settings.arabicEnabled ? tb("switchLocale") : null}
-          />
-        </div>
+        </SiteNav>
       </div>
     </header>
   );

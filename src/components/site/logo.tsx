@@ -1,50 +1,28 @@
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { LogoMark } from "@/components/brand/logo-mark";
 
 type Props = {
+  /**
+   * "dark" (default): the logo for light backgrounds.
+   * "light": the same lockup with a white wordmark, for dark panels.
+   */
   variant?: "dark" | "light";
-  idPrefix?: string;
   className?: string;
-  tagline?: boolean;
 };
 
-export function Logo({ variant = "dark", idPrefix = "logo", className, tagline = true }: Props) {
+export function Logo({ variant = "dark", className }: Props) {
   const dark = variant === "dark";
   return (
-    <Link
-      href="/"
-      className={cn("inline-flex items-center gap-3", className)}
-      aria-label="Egypt Gas Fittings, home"
-    >
-      <LogoMark className="h-11 w-11 shrink-0" idPrefix={idPrefix} />
-      <span className="flex flex-col leading-none">
-        <span
-          className={cn(
-            "text-[15px] font-extrabold uppercase tracking-tight sm:text-base",
-            dark ? "text-navy-900" : "text-white",
-          )}
-        >
-          Egypt Gas Fittings
-        </span>
-        <span
-          className={cn("mt-1 text-[13px] font-semibold", dark ? "text-navy-900" : "text-white")}
-          lang="ar"
-          dir="rtl"
-        >
-          مصر لوصلات الغاز
-        </span>
-        {tagline && (
-          <span
-            className={cn(
-              "mt-1 hidden text-[9px] uppercase tracking-[0.22em] sm:block",
-              dark ? "text-ink-500" : "text-white/60",
-            )}
-          >
-            Gas fittings &amp; accessories
-          </span>
-        )}
-      </span>
+    <Link href="/" className={cn("inline-flex items-center", className)} aria-label="Egypt Gas Fittings, home">
+      <Image
+        src={dark ? "/images/brand/logo.webp" : "/images/brand/logo-light.webp"}
+        alt=""
+        width={198}
+        height={80}
+        preload={dark}
+        className="h-14 w-auto sm:h-16"
+      />
     </Link>
   );
 }

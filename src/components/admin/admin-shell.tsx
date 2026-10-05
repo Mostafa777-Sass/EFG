@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, LogOut } from "lucide-react";
 import type { AdminIdentity } from "@/lib/auth";
 import { logout } from "@/lib/actions/auth";
-import { LogoMark } from "@/components/brand/logo-mark";
 import { AdminNav } from "./admin-nav";
 
 type Props = { admin: AdminIdentity; newInquiries: number; children: ReactNode };
@@ -13,7 +13,7 @@ export function AdminShell({ admin, newInquiries, children }: Props) {
     <div className="min-h-screen lg:flex">
       <aside className="border-b border-mist-200 bg-white lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:shrink-0 lg:flex-col lg:border-b-0 lg:border-e">
         <div className="flex items-center gap-3 border-b border-mist-200 px-5 py-4">
-          <LogoMark className="h-9 w-9" idPrefix="adm" />
+          <Image src="/images/brand/logo-mark.webp" alt="" width={36} height={36} className="h-9 w-9 shrink-0" />
           <div className="leading-tight">
             <p className="text-sm font-extrabold uppercase tracking-tight text-navy-900">EGF Admin</p>
             <p className="text-[11px] text-ink-500">Egypt Gas Fittings</p>

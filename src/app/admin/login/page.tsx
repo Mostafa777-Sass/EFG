@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/auth";
-import { LogoMark } from "@/components/brand/logo-mark";
 import { LoginForm } from "@/components/admin/login-form";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-mist-200 bg-white p-8 shadow-card">
           <div className="flex items-center gap-3">
-            <LogoMark className="h-12 w-12" idPrefix="login" />
+            <Image src="/images/brand/logo-mark.webp" alt="" width={48} height={48} className="h-12 w-12 shrink-0" />
             <div className="leading-tight">
               <p className="text-base font-extrabold uppercase tracking-tight text-navy-900">Egypt Gas Fittings</p>
               <p className="text-xs text-ink-500">Website administration</p>

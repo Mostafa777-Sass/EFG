@@ -66,11 +66,14 @@ const jobs = [
   { src: "01_Quality_ISO_9001.png", out: "quality/iso-9001.webp", max: 600, quality: 90, trim: true },
   { src: "02_Quality_EOS_Certified.png", out: "quality/eos.webp", max: 600, quality: 90, trim: true },
 
-  // Brand
-  { src: "ChatGPT Image Sep 27, 2026, 09_02_59 PM.png", out: "brand/hero.webp", max: 1400, quality: 84, flatten: true },
-  { src: "ChatGPT Image Sep 27, 2026, 09_02_59 PM.png", out: "brand/og-cover.jpg", og: true },
-  { src: "ChatGPT Image Sep 27, 2026, 08_54_44 PM.png", out: "brand/logo-raster.webp", max: 800, quality: 92, whiteToAlpha: true, trim: true },
-  { src: `${FACILITY}/01_Cover_Composite.png`, out: "brand/company-profile-cover.webp", max: 1200, quality: 84, flatten: true },
+  // Brand. The home hero and the social-sharing cover come from the client's
+  // photo checked in at public/images/brand/hero.jpeg. The logo files are built
+  // separately by scripts/prepare-logo.mjs from public/images/brand/logo-raster.jpeg.
+  // If the hero photo is replaced, give the output a new file name: Next's image
+  // optimizer caches resized copies by URL for hours, so a new picture under an
+  // old name keeps showing the old picture at some screen sizes.
+  { src: path.join(ROOT, "public", "images", "brand", "hero.jpeg"), out: "brand/home-hero.webp", max: 1600, quality: 85, flatten: true },
+  { src: path.join(ROOT, "public", "images", "brand", "hero.jpeg"), out: "brand/og-cover.jpg", og: true },
 ];
 
 /** Turns near-white pixels transparent and un-blends edge colours. */
@@ -99,7 +102,7 @@ async function whiteToAlpha(image) {
 async function run() {
   let ok = 0;
   for (const job of jobs) {
-    const src = path.join(SRC, job.src);
+    const src = path.resolve(SRC, job.src);
     const dest = path.join(OUT, job.out);
     await fs.mkdir(path.dirname(dest), { recursive: true });
     try {
@@ -107,7 +110,7 @@ async function run() {
       if (job.whiteToAlpha) image = await whiteToAlpha(image);
       if (job.trim) image = image.trim({ threshold: 8 });
       if (job.og) {
-        await image.resize(1200, 630, { fit: "cover", position: "south" }).flatten({ background: "#ffffff" }).jpeg({ quality: 82 }).toFile(dest);
+        await image.resize(1200, 630, { fit: "cover", position: "centre" }).flatten({ background: "#ffffff" }).jpeg({ quality: 82 }).toFile(dest);
       } else {
         image = image.resize({ width: job.max, height: job.max, fit: "inside", withoutEnlargement: true });
         if (job.flatten) image = image.flatten({ background: "#ffffff" });

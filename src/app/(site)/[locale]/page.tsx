@@ -62,10 +62,10 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-y-0 end-0 hidden w-5/12 bg-mist-100 lg:block" aria-hidden="true" />
-        <div className="container-x relative grid items-center gap-12 py-14 lg:grid-cols-2 lg:py-24">
-          <div>
+      <section className="relative overflow-hidden bg-white">
+        <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mist-100 to-white" aria-hidden="true" />
+        <div className="container-x relative grid gap-10 py-14 lg:grid-cols-12 lg:items-center lg:gap-x-16 lg:gap-y-14 lg:py-20">
+          <div className="lg:col-span-7">
             <p className="eyebrow inline-flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-brand-orange" />
               {c("hero.eyebrow", t("hero.eyebrow"))}
@@ -82,34 +82,22 @@ export default async function HomePage({ params }: Props) {
                 {t("hero.ctaQuote")}
               </Link>
             </div>
-
-            <ul className="mt-12 grid gap-6 sm:grid-cols-3">
-              {PILLARS.map(({ key, Icon }) => (
-                <li key={key} className="flex gap-3 sm:flex-col">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-navy-900 text-navy-900">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="text-sm font-bold uppercase tracking-wide text-navy-900">{t(`pillars.${key}.title`)}</p>
-                    <p className="mt-1 text-sm text-ink-500">{t(`pillars.${key}.text`)}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
           </div>
 
-          <div className="relative">
-            <div className="relative aspect-[1086/1010] overflow-hidden rounded-3xl border border-mist-200 shadow-card">
+          {/* The photo is a wide product line-up, so it gets the full container width. On phones it comes right after the buttons; on desktop the pillars sit beside the headline and the photo spans the row below. */}
+          <div className="relative lg:order-3 lg:col-span-12">
+            <div className="overflow-hidden rounded-3xl border border-mist-200 bg-mist-100 shadow-card">
               <Image
-                src="/images/brand/hero.webp"
+                src="/images/brand/home-hero.webp"
                 alt={t("hero.imageAlt")}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
+                width={1600}
+                height={731}
+                preload
+                sizes="(min-width: 1280px) 1216px, 100vw"
+                className="h-auto w-full"
               />
             </div>
-            <div className="absolute -bottom-5 start-6 flex items-center gap-3 rounded-xl bg-navy-900 px-4 py-3 text-white shadow-card">
+            <div className="absolute -bottom-5 start-6 flex items-center gap-3 rounded-xl bg-navy-900 px-4 py-3 text-white shadow-card sm:start-8">
               <BadgeCheck className="h-7 w-7 text-brand-gold" />
               <div>
                 <p className="text-sm font-bold">{t("hero.badge")}</p>
@@ -117,6 +105,20 @@ export default async function HomePage({ params }: Props) {
               </div>
             </div>
           </div>
+
+          <ul className="grid gap-6 sm:grid-cols-3 lg:order-2 lg:col-span-5 lg:grid-cols-1 lg:gap-7 lg:border-s lg:border-mist-200 lg:ps-10">
+            {PILLARS.map(({ key, Icon }) => (
+              <li key={key} className="flex gap-3 sm:flex-col lg:flex-row lg:gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-navy-900 text-navy-900">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-wide text-navy-900">{t(`pillars.${key}.title`)}</p>
+                  <p className="mt-1 text-sm text-ink-500">{t(`pillars.${key}.text`)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
