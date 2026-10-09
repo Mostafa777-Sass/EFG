@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Globe, Mail, MapPin, Phone, Printer, Smartphone } from "lucide-react";
+import { COMPANY_WEBSITE_URL } from "@/lib/constants";
 import { getContentPicker, getPublishedProducts, getSettings } from "@/lib/content";
 import { pick } from "@/lib/l10n";
 import { telHref } from "@/lib/utils";
@@ -30,7 +31,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
   ]);
 
   const address = pick(locale, settings.addressEn, settings.addressAr);
-  const siteHost = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/^https?:\/\//, "");
+  const websiteHost = new URL(COMPANY_WEBSITE_URL).host;
 
   const rows: Array<{ Icon: typeof Phone; label: string; content: React.ReactNode }> = [];
   if (settings.phone1 || settings.phone2) {
@@ -65,7 +66,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
       content: <a href={`mailto:${settings.email}`} className="hover:text-brand-red">{settings.email}</a>,
     });
   }
-  if (siteHost) rows.push({ Icon: Globe, label: t("website"), content: <span dir="ltr">{siteHost}</span> });
+  rows.push({ Icon: Globe, label: t("website"), content: <span dir="ltr">{websiteHost}</span> });
   if (address) rows.push({ Icon: MapPin, label: t("address"), content: <span>{address}</span> });
 
   return (

@@ -1,6 +1,11 @@
 export const SESSION_COOKIE = "egf_admin_session";
 export const SESSION_DAYS = 7;
 
+// Public web address of the company, shown as a contact detail. Deliberately
+// independent of NEXT_PUBLIC_SITE_URL, which is localhost in development and
+// may be a bare IP on a staging server.
+export const COMPANY_WEBSITE_URL = "https://egyptgasfittings.com";
+
 export const NAV_ITEMS = [
   { key: "home", href: "/" },
   { key: "about", href: "/about" },
