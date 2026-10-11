@@ -217,21 +217,6 @@ const products = [
     featured: false,
     sortOrder: 11,
   },
-  {
-    slug: "steel-hose-nipples-couplings",
-    nameEn: "Steel Hose Nipples & Couplings (Nickel-Plated)",
-    nameAr: "نبلات وكوبلنجات خراطيم صلب (مطلية بالنيكل)",
-    category: "couplings-nipples",
-    sizes: "Multiple sizes",
-    standard: null,
-    material: "Nickel-plated steel",
-    shortDescriptionEn: "Nickel-plated steel hose nipples and couplings in multiple sizes.",
-    descriptionEn:
-      "Nickel-plated steel hose nipples and couplings for flexible hose assemblies, available in multiple sizes.\n\nContact us for the current size range and specifications.",
-    imageUrl: null,
-    featured: false,
-    sortOrder: 12,
-  },
 ];
 
 const clients = [
@@ -242,28 +227,29 @@ const clients = [
   { nameEn: "NATGAS", logoUrl: "/images/clients/natgas.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 5 },
   { nameEn: "Overseas Gas", logoUrl: "/images/clients/overseas-gas.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 6 },
   { nameEn: "Town Gas", logoUrl: "/images/clients/town-gas.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 7 },
-  { nameEn: "SIANKO", nameAr: "صيانكو", logoUrl: "/images/clients/sianko.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 8 },
-  { nameEn: "Maya Gas", logoUrl: "/images/clients/maya-gas.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 9 },
+  // 2026-10-11: EGF wants the export partner ahead of SIANKO in the home page logo band.
   {
     nameEn: "Sharjah Electricity, Water & Gas Authority (SEWA)",
     nameAr: "هيئة كهرباء ومياه وغاز الشارقة",
     logoUrl: "/images/clients/sewa.webp",
     type: "EXPORT",
     country: "United Arab Emirates",
-    sortOrder: 10,
+    sortOrder: 8,
   },
+  { nameEn: "SIANKO", nameAr: "صيانكو", logoUrl: "/images/clients/sianko.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 9 },
+  { nameEn: "Maya Gas", logoUrl: "/images/clients/maya-gas.webp", type: "DOMESTIC", country: "Egypt", sortOrder: 10 },
 ];
 
 const facilityPhotos = [
-  { titleEn: "Facility entrance", titleAr: "مدخل المصنع", captionEn: "25B, Industrial Zone 4, Badr City, Cairo", imageUrl: "/images/facility/entrance.webp", sortOrder: 1 },
-  { titleEn: "Production floor", titleAr: "صالة الإنتاج", captionEn: "Badr Industrial Zone, Cairo", imageUrl: "/images/facility/production-floor.webp", sortOrder: 2 },
-  { titleEn: "Raw material stock", titleAr: "مخزون الخامات", imageUrl: "/images/facility/raw-material-stock.webp", sortOrder: 3 },
-  { titleEn: "CNC machining", titleAr: "التشغيل على ماكينات CNC", imageUrl: "/images/facility/cnc-machining.webp", sortOrder: 4 },
-  { titleEn: "Crimping machine", titleAr: "ماكينة الكبس", imageUrl: "/images/facility/crimping-machine.webp", sortOrder: 5 },
-  { titleEn: "Automatic welding machine", titleAr: "ماكينة اللحام الآلي", imageUrl: "/images/facility/automatic-welding-machine.webp", sortOrder: 6 },
-  { titleEn: "Finished products", titleAr: "المنتجات النهائية", imageUrl: "/images/facility/finished-products.webp", sortOrder: 7 },
-  { titleEn: "Packaging & dispatch", titleAr: "التعبئة والشحن", imageUrl: "/images/facility/packaging-dispatch.webp", sortOrder: 8 },
-  { titleEn: "Quality control lab", titleAr: "معمل مراقبة الجودة", imageUrl: "/images/facility/quality-control-lab.webp", sortOrder: 9 },
+  { titleEn: "Facility Entrance", titleAr: "مدخل المصنع", captionEn: "25B, Industrial Zone 4, Badr City, Cairo", imageUrl: "/images/facility/entrance.webp", sortOrder: 1 },
+  { titleEn: "Production Floor", titleAr: "صالة الإنتاج", captionEn: "Badr Industrial Zone, Cairo", imageUrl: "/images/facility/production-floor.webp", sortOrder: 2 },
+  { titleEn: "Raw Material Stock", titleAr: "مخزون الخامات", imageUrl: "/images/facility/raw-material-stock.webp", sortOrder: 3 },
+  { titleEn: "CNC Machining", titleAr: "التشغيل على ماكينات CNC", imageUrl: "/images/facility/cnc-machining.webp", sortOrder: 4 },
+  { titleEn: "Crimping Machine", titleAr: "ماكينة الكبس", imageUrl: "/images/facility/crimping-machine.webp", sortOrder: 5 },
+  { titleEn: "Automatic Welding Machine", titleAr: "ماكينة اللحام الآلي", imageUrl: "/images/facility/automatic-welding-machine.webp", sortOrder: 6 },
+  { titleEn: "Finished Products", titleAr: "المنتجات النهائية", imageUrl: "/images/facility/finished-products.webp", sortOrder: 7 },
+  { titleEn: "Packaging & Dispatch", titleAr: "التعبئة والشحن", imageUrl: "/images/facility/packaging-dispatch.webp", sortOrder: 8 },
+  { titleEn: "Quality Control Lab", titleAr: "معمل مراقبة الجودة", imageUrl: "/images/facility/quality-control-lab.webp", sortOrder: 9 },
 ];
 
 const certifications = [
@@ -294,7 +280,7 @@ const certifications = [
     issuerAr: "الشركة القابضة للغازات الطبيعية (إيجاس)",
     descriptionEn: "Approved-supplier registration with Egypt's Natural Gas Holding Company.",
     descriptionAr: "تسجيل كمورّد معتمد لدى الشركة القابضة للغازات الطبيعية.",
-    imageUrl: null,
+    imageUrl: "/images/quality/egas.webp",
     sortOrder: 3,
   },
 ];
@@ -307,19 +293,25 @@ const settings = {
   taglineAr: "وصلات وملحقات الغاز",
   phone1: "+20 2 8605 354",
   phone2: "+20 2 8605 414",
-  mobile1: "+20 100 622 2181",
-  mobile2: "+20 106 654 5852",
+  // 2026-10-11: EGF dropped the first mobile number and corrected the second one.
+  mobile1: "+20 106 654 5882",
+  mobile2: null,
   fax: "+20 2 8605 355",
   email: "info@egyptgasfittings.com",
   whatsapp: null,
   addressEn: "25B, Industrial Zone 4, Badr City, Cairo Governorate, Egypt",
   addressAr: "25 ب، المنطقة الصناعية الرابعة، مدينة بدر، محافظة القاهرة، مصر",
-  mapEmbedUrl: null,
+  // Google Maps embed centred on the Badr City industrial zone (explicit coordinates and place id,
+  // the form "Share > Embed a map" produces; query-based embeds resolve unreliably). Google cannot
+  // geocode plot 25B itself, so this is the zone, not the gate; replace it in Settings with the
+  // embed URL of the exact location when EGF provides one.
+  mapEmbedUrl:
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6910!2d31.7479134!3d30.1417129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1457f09ea87060d7%3A0x66ae79ad225600c2!2sBadr%20industrial%20zone!5e0!3m2!1sen!2seg!4v1760175000000!5m2!1sen!2seg",
   foundedYear: 2005,
   unitsProduced: "2,000,000+",
   unitsProducedYear: 2025,
   vatNumber: "208-113-142",
-  standards: ["BS 669-1", "BS 746:2014", "BS 21", "BS EN ISO 10380:2012", "BS EN 1254-2:2021", "BS EN 12165", "GIS/PL3:2022"].join("\n"),
+  standards: ["BS 669-1", "BS 746:2014", "BS EN ISO 10380:2012", "BS EN 1254-2:2021", "BS EN 12165", "GIS/PL3:2022"].join("\n"),
   arabicEnabled: false,
   notifyEmail: "info@egyptgasfittings.com",
 };
@@ -327,7 +319,7 @@ const settings = {
 // key, group, label, textEn, multiline
 const contentBlocks = [
   ["hero.eyebrow", "hero", "Hero eyebrow line", "Connecting a safer tomorrow", false],
-  ["hero.title", "hero", "Hero headline", "Precision fittings for gas connections", false],
+  ["hero.title", "hero", "Hero headline", "Egypt Gas Fittings", false],
   ["hero.subtitle", "hero", "Hero subtitle", "Manufacturing high-quality gas fittings and accessories according to British standards.", true],
   [
     "about.history.1",
@@ -367,7 +359,15 @@ const contentBlocks = [
   ["about.chairman.name", "about", "Chairman name", "Eng. Saleh Saeed", false],
   ["about.chairman.title", "about", "Chairman title", "Chairman", false],
   ["about.ceo.name", "about", "CEO name", "Eng. Mohamed Saleh Saeed", false],
-  ["about.ceo.title", "about", "CEO title", "CEO", false],
+  ["about.ceo.title", "about", "CEO title", "Chief Executive Officer", false],
+  // Added 2026-10-11 from EGF's leadership list. Kept after the CEO rows so that existing
+  // databases, which only receive the missing rows, order the group the same way.
+  ["about.partner1.name", "about", "Business partner 1 name", "Mr. Ahmed Saeed", false],
+  ["about.partner1.title", "about", "Business partner 1 title", "Business Partner", false],
+  ["about.partner2.name", "about", "Business partner 2 name", "Mr. Mohamed Saeed", false],
+  ["about.partner2.title", "about", "Business partner 2 title", "Business Partner", false],
+  ["about.operations.name", "about", "Operations manager name", "Mr. Hussein Emam", false],
+  ["about.operations.title", "about", "Operations manager title", "Operations Manager", false],
   [
     "capabilities.intro",
     "capabilities",
@@ -428,7 +428,7 @@ const contentBlocks = [
     true,
   ],
   ["contact.intro", "contact", "Contact page introduction", "Talk to our team about products, specifications, distribution supply or export orders.", true],
-  ["cta.title", "cta", "Call-to-action headline", "Together for safer homes and stronger communities.", false],
+  ["cta.title", "cta", "Call-to-action headline", "Together for Safer Homes and Stronger Communities.", false],
   ["cta.text", "cta", "Call-to-action text", "Thank you for your trust and partnership. Talk to us about your next order.", true],
 ];
 

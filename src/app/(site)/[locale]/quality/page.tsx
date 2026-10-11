@@ -97,7 +97,8 @@ export default async function QualityPage({ params }: Props) {
             </ul>
             {c("quality.quote") && (
               <blockquote className="mt-8 flex gap-4 rounded-2xl bg-mist-100 p-6">
-                <Quote className="h-6 w-6 shrink-0 text-brand-red" />
+                {/* lucide draws closing marks; turned round they read as the opening mark at the start of the quote. */}
+                <Quote className="h-6 w-6 shrink-0 rotate-180 text-brand-red" />
                 <p className="italic leading-relaxed text-ink-700">{c("quality.quote")}</p>
               </blockquote>
             )}

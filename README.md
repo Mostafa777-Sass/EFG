@@ -89,8 +89,14 @@ switcher and adds `/ar` pages to the sitemap. To also redirect Arabic browsers a
 
 `public/images` holds the web-sized versions of the original photography and logos (products, clients, facility,
 certification badges, hero). They were generated with `pnpm assets:prepare`, which reads the `EGF_Batch_*`
-folders from the parent directory (override with `ASSETS_DIR=...`). Images uploaded through the admin are stored
-in `UPLOAD_DIR` (default `./data/uploads`, `/data/uploads` in Docker) and are never part of the build.
+folders from the parent directory (override with `ASSETS_DIR=...`); only the products batch is still around.
+The client logos and the EGAS badge are built from the JPEGs checked in under `public/images/clients`, the
+expansion bellow photo from `public/images/products/expansion-bellow.jpg`, and the brand files from
+`public/images/brand/logo.jpg` and `hero.jpeg`. Pass output folders or files to rebuild a
+subset, e.g. `node scripts/prepare-assets.mjs clients quality/egas.webp`; a full run also rewrites the product
+photos without the EGF marking, which `node scripts/mark-products.mjs` adds back. Images uploaded through the
+admin are stored in `UPLOAD_DIR` (default `./data/uploads`, `/data/uploads` in Docker) and are never part of
+the build.
 
 ## Deploying to a VPS with Docker
 

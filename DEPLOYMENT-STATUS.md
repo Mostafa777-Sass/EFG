@@ -1,113 +1,110 @@
 # Deployment status and session notes
 
-Last updated: 2026-10-07. Work below was done on 2026-10-05 with Claude Code.
+Last updated: 2026-10-09 (Hostinger deployment done with Claude Code).
 No passwords are recorded here on purpose. Keep them in your password manager.
 
 ## 1. Where things stand
 
 | Item | State |
 | --- | --- |
-| Local code | Header reworked (see section 2). Changes are NOT committed to git yet. |
-| AWS (EC2 + Docker) | Live at http://35.156.198.51 and http://egyptgasfittings.com. HTTPS step (section 4, step 9) was given but not confirmed as done. |
-| Domain | egyptgasfittings.com and www.egyptgasfittings.com, DNS at Dynu, both A records point to 35.156.198.51. |
-| Hostinger VPS (no Docker) | Decided and planned, not started. See section 6. |
+| Production | Hostinger VPS, live at https://egyptgasfittings.com and https://www.egyptgasfittings.com since 2026-10-09. Node + systemd + Nginx, no Docker (README section "Deploying without Docker"). |
+| HTTPS | Let's Encrypt certificate via certbot (Nginx plugin). HTTP redirects to HTTPS. Renewal runs from the certbot systemd timer. |
+| Domain | DNS at Dynu. A records for the root and `www` point to 191.218.162.217 (TTL 120 s). |
+| AWS (EC2 + Docker) | Superseded. The instance at 35.156.198.51 was unreachable on 2026-10-09. Stop or terminate it to avoid charges (section 7). |
+| Local code | Clean, committed and pushed (commit `8a644b6` on `main`). |
+| GitHub repo | `Mostafa777-Sass/EFG`. Made public on 2026-10-09 so the server could clone it. Switch it back to private after the deploy key is in place (section 4). |
 
-## 2. Code changes made locally (uncommitted)
+## 2. Hostinger VPS layout
 
-- `src/components/site/site-nav.tsx` (new): one navigation element. Below 1024px it is the toggle
-  panel; from 1024px up it is the inline link row and the toggle button is hidden. Links use tighter
-  padding between 1024px and 1279px so the row fits.
-- `src/components/site/header.tsx`: uses `SiteNav`; contact strip shows from 1024px up.
-- Deleted `src/components/site/mobile-nav.tsx` and `src/components/site/nav-links.tsx`.
-- `src/app/(site)/[locale]/products/[slug]/page.tsx`: deprecated `priority` prop replaced by `preload`.
-- Earlier uncommitted work from previous sessions (brand assets, logo, hero) is still uncommitted too.
-- Verified: typecheck and lint pass; no horizontal overflow on 14 pages at 6 widths; header correct at
-  390/768/1023/1024/1093/1180/1280/1440 in English and Arabic.
+- Host `srv2048300`, IPv4 `191.218.162.217`, Ubuntu 24.04 LTS. Connect from the PC: `ssh root@191.218.162.217`.
+- Node v24.21.0 (NodeSource), pnpm 10.21.0, Nginx 1.24.0, certbot with `python3-certbot-nginx`.
+- App user `egf` (system user, home `/home/egf`). Code cloned from GitHub into `/var/www/egf-website`.
+- `/var/www/egf-website/.env` (mode 600): absolute `DATABASE_URL` and `UPLOAD_DIR` under `/var/www/egf-website/data`,
+  `NEXT_PUBLIC_SITE_URL="https://egyptgasfittings.com"`, `COOKIE_SECURE="true"`, SMTP left empty (inquiry e-mails off,
+  inquiries are still stored in the admin).
+- Database: SQLite at `/var/www/egf-website/data/egf.db`, uploads in `/var/www/egf-website/data/uploads`.
+  Seeded on 2026-10-09 with the company profile content and the admin account `admin@egyptgasfittings.com`.
+- Service `egf-website` (unit from `deploy/systemd/egf-website.service`): runs `node .next/standalone/server.js`
+  on 127.0.0.1:3000 as `egf`, enabled at boot. Logs: `journalctl -u egf-website -n 50`.
+- Nginx: `/etc/nginx/sites-enabled/egf.conf` (from `deploy/nginx/egf.conf`, extended by certbot with the 443 server
+  and the redirect). Default site removed.
+- Sudo: `/etc/sudoers.d/egf` should let `egf` run `systemctl ... egf-website` without a password; `deploy/update.sh`
+  needs it. Verify with `visudo -cf /etc/sudoers.d/egf` (see section 3).
 
-To do: review `git status`, then commit and push.
+## 3. Pending wrap-up (run as root unless stated)
 
-## 3. AWS setup (region eu-central-1, Frankfurt)
+- [ ] After the next deploy, once, as `egf` in `/var/www/egf-website`: `rm -rf .next/cache/images && sudo systemctl restart egf-website`.
+      Seven product photos were replaced under their existing names (EGF marking added), the two gas meter
+      union photos were swapped, the expansion bellow photo was replaced, and nine client logos were rebuilt
+      from new source files under their existing names (2026-10-11); Next's image optimizer keeps the old
+      versions cached for hours otherwise.
+- [ ] After the next deploy, once, as `egf` in `/var/www/egf-website`: `pnpm content:update`. It applies the
+      2026-10-10 wording changes to content stored in the database: the hero headline becomes the company name
+      (English and Arabic), and the CTA headline and facility photo titles get Title Case to match
+      `messages/en.json`. Since 2026-10-11 it also deletes the "Steel Hose Nipples & Couplings" product, which
+      EGF confirmed does not exist (the seed no longer creates it), drops "BS 21" from the standards list in
+      Settings, changes the CEO title to "Chief Executive Officer", replaces the two mobile numbers with the
+      single corrected one (+20 106 654 5882), and fills in the Google Maps embed on the Contact page (the Badr
+      City industrial zone; swap in the exact pin from Google Maps "Share > Embed a map" in Settings once EGF
+      provides it), gives the "EGAS Registered" certification its badge image, and moves the SEWA logo ahead of
+      SIANKO in the home page logo band. The three new leaders on the
+      About page are new content blocks that `pnpm db:seed` (part of `deploy/update.sh`) creates by itself. Safe
+      to re-run; it never overwrites admin edits.
+- [ ] Server firewall was inactive on 2026-10-09. Enable it:
+      `ufw allow OpenSSH && ufw allow 80/tcp && ufw allow 443/tcp && ufw enable` (answer `y`), then `ufw status`.
+- [ ] Sudo rule check: `visudo -cf /etc/sudoers.d/egf`. If the file is missing:
+      `echo 'egf ALL=(root) NOPASSWD: /usr/bin/systemctl * egf-website' > /etc/sudoers.d/egf && chmod 440 /etc/sudoers.d/egf`
+- [ ] Deploy key (section 4), then set the GitHub repo back to private.
+- [ ] Nightly backup cron (section 5).
+- [ ] Renewal check: `systemctl is-active certbot.timer` should print `active`.
+- [ ] Change the admin password in the admin Settings page if it was ever pasted in a chat.
+- [ ] Decide on the AWS instance and the S3 bucket `egf-website-deploy-2026` (section 7).
+- [ ] Content checks from README "Content to verify with EGF before launch".
 
-- EC2 instance `egf-website`: Ubuntu 24.04, t3.small, 20 GB gp3, 2 GB swap file added.
-- Elastic IP: 35.156.198.51 (attached).
-- Key pair: `egf-website-key` (.pem downloaded to the PC on 2026-10-05).
-- Security group: SSH from My IP + SSH from prefix list `com.amazonaws.eu-central-1.ec2-instance-connect`,
-  HTTP 80 and HTTPS 443 from anywhere.
-- IAM role `egf-ec2-s3-read` (AmazonS3ReadOnlyAccess) attached to the instance.
-- S3 bucket `egf-website-deploy-2026`: project files at the bucket root (uploaded from the PC without
-  node_modules). Also holds `egf-website.tar.gz` if it was uploaded for Hostinger (section 6).
-- On the server: code in `/home/ubuntu/egf-website`, AWS CLI v2 installed, Docker installed.
-  Docker group needs a fresh terminal; otherwise prefix docker commands with `sudo`.
-- Docker Compose: `web` (port 127.0.0.1:3000) and one-off `migrate`; data in volume `egf_data`
-  (SQLite file + uploads).
-- Nginx installed with `deploy/nginx/egf.conf` (server_name egyptgasfittings.com www.egyptgasfittings.com),
-  default site removed.
-- Server `.env` currently has `NEXT_PUBLIC_SITE_URL="http://35.156.198.51"` and `COOKIE_SECURE="false"`
-  until the HTTPS step below is completed.
-- Connect: EC2 > Instances > select > Connect > EC2 Instance Connect tab > user `ubuntu`.
+## 4. Updating the site after code changes
 
-## 4. Pending on AWS: HTTPS (step 9)
+One-time setup so the server can pull from a private repo (as `egf`: `su - egf`):
 
-Run on the server, in this order:
+1. `ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519 -C egf-vps` then `cat ~/.ssh/id_ed25519.pub`.
+2. GitHub > repo `EFG` > Settings > Deploy keys > Add deploy key, paste the public key, leave it read-only.
+3. `cd /var/www/egf-website && git remote set-url origin git@github.com:Mostafa777-Sass/EFG.git && ssh -T git@github.com`
+   (answer `yes` to the fingerprint; "successfully authenticated" is the expected message) then `git fetch`.
+
+Every later update: commit and push on the PC, then on the VPS as `egf`:
 
 ```bash
-sudo apt-get install -y certbot python3-certbot-nginx && sudo certbot --nginx -d egyptgasfittings.com -d www.egyptgasfittings.com --redirect --agree-tos --no-eff-email -m "$(grep ADMIN_EMAIL ~/egf-website/.env | cut -d'"' -f2)"
+cd /var/www/egf-website && ./deploy/update.sh
 ```
+
+It pulls, installs, applies migrations, seeds missing rows, rebuilds and restarts the service.
+After editing `.env` on the server: `sudo systemctl restart egf-website`. A change to `NEXT_PUBLIC_SITE_URL`
+also needs `pnpm build` first.
+
+## 5. Backups
+
+Everything that changes at runtime is in `/var/www/egf-website/data` (SQLite file + uploads). Nightly archive, as root:
 
 ```bash
-sed -i -e 's|^NEXT_PUBLIC_SITE_URL=.*|NEXT_PUBLIC_SITE_URL="https://egyptgasfittings.com"|' -e 's|^COOKIE_SECURE=.*|COOKIE_SECURE="true"|' ~/egf-website/.env && cd ~/egf-website && sudo docker compose up -d --force-recreate web && sleep 5 && curl -sI https://egyptgasfittings.com | head -1
+mkdir -p /home/egf/backups && chown egf:egf /home/egf/backups && (crontab -u egf -l 2>/dev/null; echo '0 2 * * * tar czf /home/egf/backups/egf-$(date +\%F).tgz -C /var/www/egf-website data') | crontab -u egf -
 ```
 
-Check: https://egyptgasfittings.com loads with a padlock and /admin login works.
+Copy the archives off the server from time to time (`scp root@191.218.162.217:/home/egf/backups/*.tgz .` on the PC).
 
-## 5. Updating the AWS site after local changes
+## 6. Pitfalls met along the way
 
-1. Upload the changed files (or the whole project without node_modules) to bucket `egf-website-deploy-2026`.
-2. On the server:
-
-```bash
-cd ~/egf-website && aws s3 sync s3://egf-website-deploy-2026/ ~/egf-website --exclude ".env" --exclude "tsconfig.tsbuildinfo" --exclude "next-env.d.ts" --exclude "prisma/*.db*" && sudo docker compose up -d --build
-```
-
-Sync never deletes: remove deleted files from the bucket and from `~/egf-website` by hand.
-After editing `.env` on the server: `sudo docker compose up -d --force-recreate web`.
-
-Backup of database + uploads (README "Backups"): run on the server
-`docker run --rm -v egf-website_egf_data:/data -v "$PWD":/backup alpine tar czf /backup/egf-backup-$(date +%F).tgz -C /data .`
-
-## 6. Planned: Hostinger VPS without Docker
-
-Follows README section "Deploying without Docker (Node + systemd + Nginx)" and `deploy/systemd/egf-website.service`,
-`deploy/nginx/egf.conf`, `deploy/update.sh`.
-
-Prepared: project archive `D:\Dev Ops-Journey\nada\egf-website.tar.gz` (built 2026-10-05, 171 files,
-includes the header changes, excludes node_modules, .env, local database).
-
-Steps agreed:
-
-1. hPanel > VPS: plain Ubuntu 24.04 LTS (no control panel), set root password, note the IP, open Browser terminal as root.
-2. Upload `egf-website.tar.gz` to bucket `egf-website-deploy-2026`, create a 12-hour presigned URL.
-3. Server prep as root: `apt update`, Node.js 24 (NodeSource), `npm i -g pnpm@10.21.0`, nginx, git, certbot;
-   `useradd --system --create-home --shell /bin/bash egf`; firewall allow 22, 80, 443.
-4. As user `egf`: download and extract the archive to `/var/www/egf-website`; create `.env` with ABSOLUTE paths:
-   `DATABASE_URL="file:/var/www/egf-website/data/egf.db"`, `UPLOAD_DIR="/var/www/egf-website/data/uploads"`,
-   `NEXT_PUBLIC_SITE_URL="https://egyptgasfittings.com"`, admin email/password, `COOKIE_SECURE="true"`;
-   `mkdir -p data/uploads`; then `pnpm install --frozen-lockfile && pnpm db:deploy && pnpm db:seed && pnpm build`.
-5. Service: copy `deploy/systemd/egf-website.service` to `/etc/systemd/system/`, `daemon-reload`, `enable --now`.
-6. Nginx: copy `deploy/nginx/egf.conf` to sites-available, symlink, remove default, `nginx -t`, reload;
-   certbot for both names.
-7. Move the domain: change the two A records at Dynu from 35.156.198.51 to the Hostinger IP.
-8. Only if content was edited on the AWS site: back up the `egf_data` volume (section 5) and copy the
-   SQLite file + uploads into `/var/www/egf-website/data` on Hostinger before step 5.
-9. Decide what to do with the AWS instance afterwards (stop it to avoid charges, or keep as backup).
-
-Open questions: was any content edited or uploaded in the AWS admin (needs step 8)? Keep AWS or switch fully?
-
-## 7. Pitfalls met along the way
-
-- Browser-terminal pastes can add leading spaces (breaks heredocs, use single-line `printf` commands)
-  and can turn `--` into a long dash (retype the dashes).
-- `apt install awscli` is not available on Ubuntu 24.04; use the official AWS CLI v2 installer.
-- EC2 Instance Connect needs the SSH rule for the region's ec2-instance-connect prefix list.
-- Docker group membership needs a new login; otherwise use `sudo docker ...`.
+- Pasting multi-line blocks into the SSH session adds leading spaces, which breaks heredocs. Write files with a
+  single-line `printf '%s\n' 'line1' 'line2' ... > file` instead.
+- A pasted `--` can turn into a long dash; the error then shows `\xe2\x80\x93`. Retype the two hyphens or use
+  single-dash options (`certbot -a nginx -i nginx -d ... -m ...`).
+- certbot must run after the DNS change, because the certificate authority validates through the domain name.
+- Keep `COOKIE_SECURE="false"` until HTTPS exists, otherwise the admin login cannot set its cookie over plain HTTP.
+  Switch it to `"true"` and restart the service once the certificate is in place.
 - Local dev: `pnpm dev` at http://localhost:3000, admin at /admin with the credentials from the README.
+
+## 7. Old AWS setup (reference until it is shut down)
+
+Region eu-central-1 (Frankfurt). EC2 instance `egf-website` (Ubuntu 24.04, t3.small), Elastic IP 35.156.198.51,
+key pair `egf-website-key`, IAM role `egf-ec2-s3-read`, S3 bucket `egf-website-deploy-2026`, Docker Compose with
+the data in volume `egf_data`, Nginx with `deploy/nginx/egf.conf`. HTTPS was never confirmed there. Unreachable on
+2026-10-09 (no answer on ports 22, 80, 443). If it is stopped rather than terminated, release the Elastic IP too,
+otherwise it keeps billing.

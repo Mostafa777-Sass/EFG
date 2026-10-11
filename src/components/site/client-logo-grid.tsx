@@ -18,8 +18,10 @@ export function ClientLogoGrid({ clients, locale, compact = false }: Props) {
         const card = (
           <div
             className={cn(
-              "flex items-center justify-center rounded-xl border border-mist-200 bg-white p-4 transition-colors hover:border-navy-900/20",
-              compact ? "h-24" : "h-32",
+              // Tall enough for square emblems (SEWA, Egypt Gas, Town Gas) to read; wide marks are
+              // bound by the card width anyway, so they barely change.
+              "flex items-center justify-center rounded-xl border border-mist-200 bg-white p-3 transition-colors hover:border-navy-900/20",
+              compact ? "h-32" : "h-40",
             )}
             title={name}
           >

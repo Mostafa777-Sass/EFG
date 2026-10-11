@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, Package, Phone, Send } from "lucide-react";
+import { ArrowLeft, Package, Send } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { getProductBySlug, getPublishedProducts, getSettings } from "@/lib/content";
+import { getProductBySlug, getPublishedProducts } from "@/lib/content";
 import { pick } from "@/lib/l10n";
-import { telHref } from "@/lib/utils";
 import { AppImage } from "@/components/ui/app-image";
 import { ProductCard } from "@/components/site/product-card";
 
@@ -37,7 +36,7 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [t, tc, settings] = await Promise.all([getTranslations("products"), getTranslations("common"), getSettings()]);
+  const [t, tc] = await Promise.all([getTranslations("products"), getTranslations("common")]);
   const related = product.category
     ? (await getPublishedProducts({ categorySlug: product.category.slug })).filter((p) => p.id !== product.id).slice(0, 3)
     : [];
@@ -119,17 +118,11 @@ export default async function ProductPage({ params }: Props) {
               </div>
             )}
 
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-10">
               <Link href={{ pathname: "/contact", query: { product: product.slug } }} className="btn-primary">
                 <Send className="h-4 w-4 rtl:-scale-x-100" />
                 {t("requestQuote")}
               </Link>
-              {settings.phone1 && (
-                <a href={telHref(settings.phone1)} className="btn-outline">
-                  <Phone className="h-4 w-4" />
-                  <span dir="ltr">{settings.phone1}</span>
-                </a>
-              )}
             </div>
           </div>
         </div>

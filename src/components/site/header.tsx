@@ -1,9 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { Mail, Phone, ShieldCheck } from "lucide-react";
+import { Mail, ShieldCheck } from "lucide-react";
 import type { SiteSettings } from "@prisma/client";
 import { Link } from "@/i18n/navigation";
 import { NAV_ITEMS } from "@/lib/constants";
-import { telHref } from "@/lib/utils";
 import { Logo } from "./logo";
 import { SiteNav } from "./site-nav";
 import { LocaleSwitcher } from "./locale-switcher";
@@ -19,12 +18,6 @@ export async function Header({ settings }: { settings: SiteSettings }) {
       <div className="hidden bg-navy-900 text-xs text-white/85 lg:block">
         <div className="container-x flex h-9 items-center justify-between gap-6">
           <div className="flex items-center gap-6">
-            {settings.phone1 && (
-              <a href={telHref(settings.phone1)} className="inline-flex items-center gap-1.5 hover:text-white">
-                <Phone className="h-3.5 w-3.5" />
-                <span dir="ltr">{settings.phone1}</span>
-              </a>
-            )}
             {settings.email && (
               <a href={`mailto:${settings.email}`} className="inline-flex items-center gap-1.5 hover:text-white">
                 <Mail className="h-3.5 w-3.5" />

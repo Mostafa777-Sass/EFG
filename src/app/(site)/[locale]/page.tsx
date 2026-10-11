@@ -34,6 +34,14 @@ const TECHNOLOGIES = [
   { key: "hose", Icon: Wind },
 ] as const;
 
+// Scanned certificates in public/images/certs; captions live in messages/*.json under home.certificates.
+const CERTIFICATES = [
+  { key: "iso9001", src: "/images/certs/iso-9001-2015.webp" },
+  { key: "eosIso10380", src: "/images/certs/eos-conformity-iso-10380.webp" },
+  { key: "eosBs669", src: "/images/certs/eos-batch-conformity-bs-669.webp" },
+  { key: "egas", src: "/images/certs/egas-supplier-registration.webp" },
+] as const;
+
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -199,6 +207,49 @@ export default async function HomePage({ params }: Props) {
                 {(cert.issuerEn || cert.issuerAr) && (
                   <p className="mt-1 text-xs text-ink-500">{pick(locale, cert.issuerEn, cert.issuerAr)}</p>
                 )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Certificates */}
+      <section id="certificates" className="section bg-navy-900 text-white">
+        <div className="container-x">
+          <SectionHeading
+            eyebrow={t("certificates.eyebrow")}
+            title={t("certificates.title")}
+            intro={t("certificates.intro")}
+            align="center"
+            light
+          />
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {CERTIFICATES.map(({ key, src }) => (
+              <li key={key}>
+                <a
+                  href={src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white text-start shadow-card transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
+                >
+                  <div className="relative aspect-[7/10] border-b border-mist-200 bg-mist-100">
+                    <AppImage
+                      src={src}
+                      alt={t(`certificates.items.${key}.title`)}
+                      fill
+                      sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                      className="object-contain p-2"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <p className="text-sm font-bold text-navy-900">{t(`certificates.items.${key}.title`)}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-ink-500">{t(`certificates.items.${key}.issuer`)}</p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-xs font-semibold text-brand-red group-hover:text-brand-red-dark">
+                      {t("certificates.view")}
+                      <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
+                    </span>
+                  </div>
+                </a>
               </li>
             ))}
           </ul>

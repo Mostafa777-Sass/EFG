@@ -38,17 +38,17 @@ export function ProductCard({ product, locale, labels }: Props) {
       <div className="flex flex-1 flex-col gap-3 border-t border-mist-200 p-5">
         {category && <p className="eyebrow text-[10px]">{category}</p>}
         <h3 className="text-lg leading-snug text-navy-900 transition-colors group-hover:text-brand-red">{name}</h3>
-        <dl className="mt-auto grid grid-cols-2 gap-x-3 gap-y-2 pt-2 text-xs">
+        <dl className="mt-auto grid grid-cols-2 gap-x-3 gap-y-2 pt-2">
           {product.sizes && (
             <div>
-              <dt className="font-semibold uppercase tracking-wider text-ink-300">{labels.size}</dt>
-              <dd className="mt-0.5 font-medium text-ink-700" dir="ltr">{product.sizes}</dd>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-ink-500">{labels.size}</dt>
+              <dd className="mt-1 text-base font-semibold text-ink-900" dir="ltr">{product.sizes}</dd>
             </div>
           )}
           {product.standard && (
             <div>
-              <dt className="font-semibold uppercase tracking-wider text-ink-300">{labels.standard}</dt>
-              <dd className="mt-0.5 font-medium text-ink-700" dir="ltr">{product.standard}</dd>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-ink-500">{labels.standard}</dt>
+              <dd className="mt-1 text-base font-semibold text-ink-900" dir="ltr">{product.standard}</dd>
             </div>
           )}
         </dl>

@@ -31,10 +31,11 @@ export default async function AboutPage({ params }: Props) {
     { Icon: Globe, label: t("export"), value: t("exportValue") },
   ];
 
-  const leaders = [
-    { name: c("about.chairman.name"), title: c("about.chairman.title") },
-    { name: c("about.ceo.name"), title: c("about.ceo.title") },
-  ].filter((l) => l.name);
+  // Order as given by EGF (2026-10-11). Names and titles are content blocks, editable in the
+  // admin under "About page"; a person whose name block is empty or missing is left out.
+  const leaders = (["chairman", "partner1", "partner2", "ceo", "operations"] as const)
+    .map((key) => ({ key, name: c(`about.${key}.name`), title: c(`about.${key}.title`) }))
+    .filter((l) => l.name);
 
   return (
     <>
@@ -51,7 +52,7 @@ export default async function AboutPage({ params }: Props) {
                 <div className="red-rule" />
                 <ul className="mt-6 grid gap-4 sm:grid-cols-2">
                   {leaders.map((leader) => (
-                    <li key={leader.name} className="flex items-center gap-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-card">
+                    <li key={leader.key} className="flex items-center gap-4 rounded-2xl border border-mist-200 bg-white p-5 shadow-card">
                       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-mist-100 text-navy-900">
                         <UserRound className="h-7 w-7" />
                       </span>
