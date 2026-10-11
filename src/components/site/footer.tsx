@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { NAV_ITEMS } from "@/lib/constants";
 import { pick } from "@/lib/l10n";
 import { telHref } from "@/lib/utils";
-import { Logo } from "./logo";
+import { Logo, customLogo } from "./logo";
 
 type Props = { settings: SiteSettings; categories: Category[] };
 
@@ -21,7 +21,11 @@ export async function Footer({ settings, categories }: Props) {
     <footer className="bg-navy-950 text-white/80">
       <div className="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <Logo variant="light" layout="stacked" />
+          <Logo
+            variant="light"
+            layout="stacked"
+            custom={customLogo(settings.footerLogoUrl, settings.footerLogoWidth, settings.footerLogoHeight)}
+          />
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70">{t("about")}</p>
           <p className="mt-6 inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white">
             <ShieldCheck className="h-4 w-4 text-brand-gold" />

@@ -37,6 +37,7 @@ export const ProductSchema = z.object({
   sizes: optionalText(160),
   standard: optionalText(160),
   material: optionalText(160),
+  materialAr: optionalText(160),
   shortDescriptionEn: optionalText(300),
   shortDescriptionAr: optionalText(300),
   descriptionEn: optionalText(5000),

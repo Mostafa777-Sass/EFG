@@ -4,7 +4,6 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { LocaleSwitcher } from "./locale-switcher";
 
 export type NavItem = { href: string; label: string };
 
@@ -15,8 +14,7 @@ type Props = {
   quoteLabel: string;
   menuLabel: string;
   closeLabel: string;
-  localeLabel?: string | null;
-  /** Header actions shown next to the menu button (the quote button). */
+  /** Header actions shown next to the menu button (the language toggle and the quote button). */
   children?: ReactNode;
 };
 
@@ -30,7 +28,7 @@ function isActivePath(pathname: string, href: string): boolean {
  * panel under the sticky header that the menu button opens; from lg up the
  * same element becomes the inline link row and the button disappears.
  */
-export function SiteNav({ items, label, quoteLabel, menuLabel, closeLabel, localeLabel, children }: Props) {
+export function SiteNav({ items, label, quoteLabel, menuLabel, closeLabel, children }: Props) {
   const pathname = usePathname();
   // The panel is only open for the pathname it was opened on, so any
   // navigation closes it without an effect.
@@ -100,12 +98,6 @@ export function SiteNav({ items, label, quoteLabel, menuLabel, closeLabel, local
           <Link href="/contact" className="btn-primary md:hidden">
             {quoteLabel}
           </Link>
-          {localeLabel && (
-            <LocaleSwitcher
-              label={localeLabel}
-              className="justify-center rounded-lg border border-mist-200 py-3 text-navy-900 hover:text-navy-900"
-            />
-          )}
         </div>
       </nav>
 

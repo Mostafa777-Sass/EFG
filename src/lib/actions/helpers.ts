@@ -5,19 +5,24 @@ import { bool } from "@/lib/validation";
 
 /**
  * Applies an optional image upload / removal from an admin form.
- * Field names: `image` (file) and `removeImage` (checkbox).
+ * Field names: `image` (file) and `removeImage` (checkbox) by default; with
+ * `opts.field` set to e.g. `headerLogo` they become `headerLogo` and
+ * `removeHeaderLogo`, so one form can carry several images.
+ * `width` and `height` are only present when a new file was stored.
  */
 export async function applyImageUpload(
   formData: FormData,
   current: string | null,
-  opts: { kind: UploadKind; maxWidth?: number; keepAlpha?: boolean },
-): Promise<{ url: string | null; error?: string }> {
-  const file = fileFromForm(formData, "image");
+  opts: { kind: UploadKind; maxWidth?: number; keepAlpha?: boolean; field?: string },
+): Promise<{ url: string | null; width?: number; height?: number; error?: string }> {
+  const field = opts.field ?? "image";
+  const removeField = `remove${field.charAt(0).toUpperCase()}${field.slice(1)}`;
+  const file = fileFromForm(formData, field);
   if (file) {
     try {
-      const url = await saveImage(file, opts);
+      const saved = await saveImage(file, opts);
       await deleteUpload(current);
-      return { url };
+      return { url: saved.url, width: saved.width, height: saved.height };
     } catch (error) {
       return {
         url: current,
@@ -25,7 +30,7 @@ export async function applyImageUpload(
       };
     }
   }
-  if (bool(formData, "removeImage") && current) {
+  if (bool(formData, removeField) && current) {
     await deleteUpload(current);
     return { url: null };
   }

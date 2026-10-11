@@ -3,7 +3,7 @@ import { Mail, ShieldCheck } from "lucide-react";
 import type { SiteSettings } from "@prisma/client";
 import { Link } from "@/i18n/navigation";
 import { NAV_ITEMS } from "@/lib/constants";
-import { Logo } from "./logo";
+import { Logo, customLogo } from "./logo";
 import { SiteNav } from "./site-nav";
 import { LocaleSwitcher } from "./locale-switcher";
 
@@ -25,27 +25,19 @@ export async function Header({ settings }: { settings: SiteSettings }) {
               </a>
             )}
           </div>
-          <div className="flex items-center gap-6">
-            <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-brand-gold" />
-              {tb("certified")}
-            </span>
-            {settings.arabicEnabled && <LocaleSwitcher label={tb("switchLocale")} />}
-          </div>
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5 text-brand-gold" />
+            {tb("certified")}
+          </span>
         </div>
       </div>
 
       <div className="container-x flex h-20 items-center justify-between gap-6">
-        <Logo />
+        <Logo custom={customLogo(settings.headerLogoUrl, settings.headerLogoWidth, settings.headerLogoHeight)} />
         {/* One navigation element: the menu-toggle panel below 1024px, the inline link row from 1024px up. */}
-        <SiteNav
-          items={items}
-          label={t("mainNavigation")}
-          quoteLabel={t("requestQuote")}
-          menuLabel={t("menu")}
-          closeLabel={t("close")}
-          localeLabel={settings.arabicEnabled ? tb("switchLocale") : null}
-        >
+        <SiteNav items={items} label={t("mainNavigation")} quoteLabel={t("requestQuote")} menuLabel={t("menu")} closeLabel={t("close")}>
+          {/* The language toggle sits in the main row at every size, next to the quote button. */}
+          {settings.arabicEnabled && <LocaleSwitcher label={tb("switchLocale")} />}
           <Link href="/contact" className="btn-primary btn-sm hidden md:inline-flex">
             {t("requestQuote")}
           </Link>

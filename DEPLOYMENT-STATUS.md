@@ -38,6 +38,16 @@ No passwords are recorded here on purpose. Keep them in your password manager.
       documents each step and is safe to re-run), then the image cache clear and a restart. For the next image
       replaced under an existing name, clear both cache folders, because the standalone server keeps its own:
       as `egf`: `rm -rf .next/cache/images .next/standalone/.next/cache/images`, then `systemctl restart egf-website`.
+- [ ] After the next deploy (Arabic version, 2026-10-11), once, as `egf` in `/var/www/egf-website`: `pnpm content:update`.
+      It fills the Arabic text of 79 database fields (page texts, product descriptions and materials, category
+      descriptions, client names, photo captions) wherever the Arabic field is still empty. `deploy/update.sh`
+      applies the new `materialAr` column through `pnpm db:deploy` before that. The Arabic stays invisible to
+      visitors until the owner reviews `https://egyptgasfittings.com/ar` and ticks "Show the Arabic version and its language toggle"
+      in admin Settings, which also switches on the header toggle, the `/ar` sitemap entries and the `hreflang`
+      links. The scripts never touch that checkbox. The same deploy adds the logo upload fields in Settings
+      (migration `site_logo_uploads`, applied by `update.sh`); logos uploaded there are stored under
+      `data/uploads/brand` with the other uploads, survive later deploys, and need no cache clear because each
+      upload gets a new file name.
 - [ ] Contact page map: the pin is Google's "Badr industrial zone" place, not plot 25B. Replace it in Settings with
       the "Share > Embed a map" URL of the exact location once EGF provides it.
 - [ ] Server firewall was inactive on 2026-10-09. Enable it:

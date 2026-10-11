@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates } from "@/i18n/alternates";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MapPin } from "lucide-react";
 import { getContentPicker, getFacilityPhotos, getSettings } from "@/lib/content";
@@ -12,7 +13,7 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "facility" });
-  return { title: t("title") };
+  return { title: t("title"), alternates: await localeAlternates("/facility") };
 }
 
 export default async function FacilityPage({ params }: Props) {

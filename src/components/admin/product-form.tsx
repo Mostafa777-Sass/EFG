@@ -45,6 +45,7 @@ export function ProductForm({ action, product, categories }: Props) {
         <TextField label="Sizes" name="sizes" dir="ltr" defaultValue={d.text("sizes", product?.sizes)} placeholder={'e.g. 1/2" – 3/4" – 1"'} error={e.sizes} />
         <TextField label="Standard" name="standard" dir="ltr" defaultValue={d.text("standard", product?.standard)} placeholder="e.g. BS 746:2014" error={e.standard} />
         <TextField label="Material" name="material" defaultValue={d.text("material", product?.material)} placeholder="e.g. Brass CW617N" error={e.material} />
+        <TextField label="Material (Arabic)" name="materialAr" dir="rtl" defaultValue={d.text("materialAr", product?.materialAr)} error={e.materialAr} />
         <TextField label="Sort order" name="sortOrder" type="number" min={0} defaultValue={d.text("sortOrder", product?.sortOrder ?? 0)} hint="Lower numbers appear first." error={e.sortOrder} />
       </Fieldset>
 

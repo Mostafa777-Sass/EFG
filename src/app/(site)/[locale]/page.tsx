@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, BadgeCheck, Cog, Flame, House, ShieldCheck, Wind, Workflow } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { localeAlternates } from "@/i18n/alternates";
 import {
   getCertifications,
   getClients,
@@ -20,6 +22,10 @@ import { StatBand } from "@/components/site/stat-band";
 import { CtaBand } from "@/components/site/cta-band";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { alternates: await localeAlternates("/") };
+}
 
 const PILLARS = [
   { key: "quality", Icon: ShieldCheck },

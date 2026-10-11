@@ -8,6 +8,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
+import * as arabic from "../prisma/arabic-content.mjs";
 
 const prisma = new PrismaClient();
 
@@ -139,6 +140,58 @@ const egas = await prisma.certification.updateMany({
   data: { imageUrl: "/images/quality/egas.webp" },
 });
 changed += egas.count;
+
+// Arabic text for the content stored in the database (2026-10-11), from prisma/arabic-content.mjs.
+// Every field is filled only while it is still empty, so Arabic entered in the admin stays as it is.
+const empty = (field) => ({ OR: [{ [field]: null }, { [field]: "" }] });
+let arabicFields = 0;
+for (const [key, textAr] of Object.entries(arabic.contentBlocks)) {
+  const result = await prisma.contentBlock.updateMany({ where: { key, ...empty("textAr") }, data: { textAr } });
+  arabicFields += result.count;
+}
+for (const [slug, fields] of Object.entries(arabic.products)) {
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    select: { id: true, materialAr: true, shortDescriptionAr: true, descriptionAr: true },
+  });
+  if (!product) continue;
+  const data = {};
+  for (const [field, value] of Object.entries(fields)) {
+    if (!product[field] || !product[field].trim()) data[field] = value;
+  }
+  if (Object.keys(data).length > 0) {
+    await prisma.product.update({ where: { id: product.id }, data });
+    arabicFields += Object.keys(data).length;
+  }
+}
+for (const [slug, descriptionAr] of Object.entries(arabic.categories)) {
+  const result = await prisma.category.updateMany({ where: { slug, ...empty("descriptionAr") }, data: { descriptionAr } });
+  arabicFields += result.count;
+}
+for (const [nameEn, nameAr] of Object.entries(arabic.clients)) {
+  const result = await prisma.client.updateMany({ where: { nameEn, ...empty("nameAr") }, data: { nameAr } });
+  arabicFields += result.count;
+}
+for (const [titleEn, captionAr] of Object.entries(arabic.facilityCaptions)) {
+  const result = await prisma.facilityPhoto.updateMany({ where: { titleEn, ...empty("captionAr") }, data: { captionAr } });
+  arabicFields += result.count;
+}
+if (arabicFields > 0) console.log(`Filled ${arabicFields} empty Arabic field(s).`);
+changed += arabicFields;
+
+// Corrections to Arabic product text that was already filled (2026-10-11): the F/F adaptor
+// keeps its Latin thread designation instead of a literal translation. Each row applies only
+// while the field still holds the exact old text. slug, field, old text, new text.
+const productTextFixes = [
+  ["adaptor-fitting-ff", "nameAr", "وصلة محول أنثى/أنثى", "وصلة محول F/F"],
+  ["adaptor-fitting-ff", "shortDescriptionAr", "وصلة محول أنثى/أنثى من النحاس الأصفر، مقاس 1/2 بوصة، مشغّلة من النحاس وفق المواصفة BS EN 12165.", arabic.products["adaptor-fitting-ff"].shortDescriptionAr],
+  ["adaptor-fitting-ff", "descriptionAr", "وصلة محول أنثى/أنثى بمقاس 1/2 بوصة، مشغّلة من خامات النحاس الأصفر المطروق وفق المواصفة BS EN 12165.\n\nتُستخدم لربط مكونات تمديدات الغاز الملولبة والتحويل بينها.", arabic.products["adaptor-fitting-ff"].descriptionAr],
+];
+for (const [slug, field, oldText, newText] of productTextFixes) {
+  const result = await prisma.product.updateMany({ where: { slug, [field]: oldText }, data: { [field]: newText } });
+  changed += result.count;
+  if (result.count > 0) console.log(`Corrected ${field} of ${slug}.`);
+}
 
 console.log(`Content updates applied: ${changed} database change(s).`);
 await prisma.$disconnect();

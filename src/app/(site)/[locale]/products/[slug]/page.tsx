@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates } from "@/i18n/alternates";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, Package, Send } from "lucide-react";
@@ -20,6 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: name,
     description,
     openGraph: product.imageUrl ? { images: [{ url: product.imageUrl }] } : undefined,
+    alternates: await localeAlternates(`/products/${slug}`),
   };
 }
 
@@ -46,10 +48,11 @@ export default async function ProductPage({ params }: Props) {
   const description = pick(locale, product.descriptionEn, product.descriptionAr);
   const categoryName = product.category ? pick(locale, product.category.nameEn, product.category.nameAr) : null;
 
+  // Sizes and standards are codes and stay left-to-right in Arabic; material and category are words.
   const specs = [
-    { label: tc("size"), value: product.sizes },
-    { label: tc("standard"), value: product.standard },
-    { label: tc("material"), value: product.material },
+    { label: tc("size"), value: product.sizes, ltr: true },
+    { label: tc("standard"), value: product.standard, ltr: true },
+    { label: tc("material"), value: pick(locale, product.material, product.materialAr) || null },
     { label: tc("category"), value: categoryName },
   ].filter((s) => s.value);
 
@@ -101,7 +104,7 @@ export default async function ProductPage({ params }: Props) {
                   {specs.map((spec) => (
                     <div key={spec.label} className="grid grid-cols-3 gap-4 px-5 py-3 text-sm">
                       <dt className="font-semibold text-navy-900">{spec.label}</dt>
-                      <dd className="col-span-2 text-ink-700" dir={spec.label === tc("category") ? undefined : "ltr"}>
+                      <dd className="col-span-2 text-ink-700" dir={spec.ltr ? "ltr" : undefined}>
                         {spec.value}
                       </dd>
                     </div>

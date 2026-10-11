@@ -5,6 +5,7 @@ import type { SiteSettings } from "@prisma/client";
 import { saveSettings } from "@/lib/actions/settings";
 import { EMPTY_FORM_STATE } from "@/lib/types";
 import { CheckboxField, Fieldset, FormMessage, TextArea, TextField } from "./fields";
+import { ImageField } from "./image-field";
 import { SubmitButton } from "./submit-button";
 import { formDefaults } from "./form-defaults";
 
@@ -29,6 +30,29 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
         <TextField label="VAT registration number" name="vatNumber" dir="ltr" defaultValue={d.text("vatNumber", s.vatNumber)} error={e.vatNumber} />
         <TextField label="Units produced (headline figure)" name="unitsProduced" dir="ltr" defaultValue={d.text("unitsProduced", s.unitsProduced)} placeholder="e.g. 2,000,000+" error={e.unitsProduced} />
         <TextField label="Units produced in (year)" name="unitsProducedYear" type="number" defaultValue={d.text("unitsProducedYear", s.unitsProducedYear)} error={e.unitsProducedYear} />
+      </Fieldset>
+
+      <Fieldset
+        legend="Logos"
+        description="The logos in the header and the footer of the public site. Leave a field empty to keep the built-in EGF logo; tick “Remove current image” to go back to it."
+      >
+        <ImageField
+          label="Header logo"
+          name="headerLogo"
+          shape="wide"
+          currentUrl={s.headerLogoUrl}
+          error={e.headerLogo}
+          hint="Horizontal lockup with dark text, shown on the white header bar at about 64 px tall. Transparent PNG, at least 600 px wide."
+        />
+        <ImageField
+          label="Footer logo"
+          name="footerLogo"
+          shape="wide"
+          currentUrl={s.footerLogoUrl}
+          error={e.footerLogo}
+          previewClassName="bg-navy-950"
+          hint="Version for the dark navy footer, usually with white text, shown about 176 px wide. Transparent PNG, at least 600 px wide. The preview box is dark so a white logo stays visible."
+        />
       </Fieldset>
 
       <Fieldset legend="Contact details">
@@ -67,10 +91,10 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
 
       <Fieldset legend="Languages & social">
         <CheckboxField
-          label="Enable the Arabic version"
+          label="Show the Arabic version and its language toggle"
           name="arabicEnabled"
           defaultChecked={d.checked("arabicEnabled", s.arabicEnabled)}
-          hint="Shows the language switcher and includes /ar pages in the sitemap. Arabic fields that are empty fall back to English."
+          hint="English is the main language and the default for every visitor either way. Ticked: the العربية / English toggle appears in the header, the Arabic pages are listed in the sitemap and announced to search engines. Unticked: the toggle is hidden; /ar can still be opened directly for review. Empty Arabic fields fall back to English."
           className="md:col-span-2"
         />
         <TextField label="Facebook URL" name="facebookUrl" type="url" dir="ltr" defaultValue={d.text("facebookUrl", s.facebookUrl)} error={e.facebookUrl} />

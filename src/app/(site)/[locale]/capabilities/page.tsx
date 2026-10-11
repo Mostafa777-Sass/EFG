@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates } from "@/i18n/alternates";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Cog, Flame, Gauge, Globe, Layers, ShieldCheck, Wind, Workflow } from "lucide-react";
 import { getContentPicker, getSettings } from "@/lib/content";
@@ -20,7 +21,7 @@ const STEPS = ["1", "2", "3", "4", "5", "6"] as const;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "capabilities" });
-  return { title: t("title") };
+  return { title: t("title"), alternates: await localeAlternates("/capabilities") };
 }
 
 export default async function CapabilitiesPage({ params }: Props) {

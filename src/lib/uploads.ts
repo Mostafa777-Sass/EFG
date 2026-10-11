@@ -12,18 +12,20 @@ export const UPLOAD_URL_PREFIX = "/uploads/";
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 const MAX_BYTES = 10 * 1024 * 1024;
 
-export type UploadKind = "products" | "clients" | "facility" | "certifications" | "general";
+export type UploadKind = "products" | "clients" | "facility" | "certifications" | "brand" | "general";
+
+export type SavedImage = { url: string; width: number; height: number };
 
 export class UploadError extends Error {}
 
 /**
  * Validates, resizes and converts an uploaded image to WebP, then stores it
- * under UPLOAD_DIR. Returns the public URL (/uploads/...).
+ * under UPLOAD_DIR. Returns the public URL (/uploads/...) and the stored size.
  */
 export async function saveImage(
   file: File,
   opts: { kind: UploadKind; maxWidth?: number; keepAlpha?: boolean },
-): Promise<string> {
+): Promise<SavedImage> {
   if (!ALLOWED_TYPES.has(file.type)) {
     throw new UploadError("Only JPEG, PNG, WebP or AVIF images are accepted.");
   }
@@ -41,7 +43,7 @@ export async function saveImage(
     withoutEnlargement: true,
   });
   if (!opts.keepAlpha) pipeline = pipeline.flatten({ background: "#ffffff" });
-  const output = await pipeline.webp({ quality: 85 }).toBuffer();
+  const { data: output, info } = await pipeline.webp({ quality: 85 }).toBuffer({ resolveWithObject: true });
 
   const year = String(new Date().getFullYear());
   const name = `${randomBytes(8).toString("hex")}.webp`;
@@ -50,7 +52,7 @@ export async function saveImage(
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(path.join(/* turbopackIgnore: true */ dir, name), output);
 
-  return `${UPLOAD_URL_PREFIX}${opts.kind}/${year}/${name}`;
+  return { url: `${UPLOAD_URL_PREFIX}${opts.kind}/${year}/${name}`, width: info.width, height: info.height };
 }
 
 /** Deletes a previously uploaded file. Ignores static /images/ assets and missing files. */

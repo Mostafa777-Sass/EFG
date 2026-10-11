@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates } from "@/i18n/alternates";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BadgeCheck, Ship, Truck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -23,7 +24,7 @@ const SERVICES = [
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "products" });
-  return { title: t("title") };
+  return { title: t("title"), alternates: await localeAlternates("/products") };
 }
 
 export default async function ProductsPage({ params, searchParams }: Props) {

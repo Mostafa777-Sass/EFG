@@ -6,6 +6,9 @@
 //
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+// Arabic twins of the texts below, keyed by block key, product slug, category slug, client name
+// and facility photo title, so that the seed and scripts/update-content.mjs share one source.
+import * as arabic from "./arabic-content.mjs";
 
 const prisma = new PrismaClient();
 
@@ -190,7 +193,7 @@ const products = [
   {
     slug: "adaptor-fitting-ff",
     nameEn: "Adaptor Fitting, F/F",
-    nameAr: "وصلة محول أنثى/أنثى",
+    nameAr: "وصلة محول F/F",
     category: "compression-adaptor-fittings",
     sizes: '1/2"',
     standard: "BS EN 12165",
@@ -316,7 +319,7 @@ const settings = {
   notifyEmail: "info@egyptgasfittings.com",
 };
 
-// key, group, label, textEn, multiline
+// key, group, label, textEn, multiline (the Arabic text comes from arabic-content.mjs by key)
 const contentBlocks = [
   ["hero.eyebrow", "hero", "Hero eyebrow line", "Connecting a safer tomorrow", false],
   ["hero.title", "hero", "Hero headline", "Egypt Gas Fittings", false],
@@ -461,7 +464,7 @@ async function seedCategories() {
   for (const c of categories) {
     const exists = await prisma.category.findUnique({ where: { slug: c.slug } });
     if (exists) continue;
-    await prisma.category.create({ data: c });
+    await prisma.category.create({ data: { ...c, descriptionAr: c.descriptionAr ?? arabic.categories[c.slug] ?? null } });
     created++;
   }
   console.log(`Categories: ${created} created`);
@@ -474,7 +477,7 @@ async function seedProducts() {
     if (exists) continue;
     const { category, ...data } = p;
     const cat = await prisma.category.findUnique({ where: { slug: category } });
-    await prisma.product.create({ data: { ...data, categoryId: cat?.id ?? null, published: true } });
+    await prisma.product.create({ data: { ...data, ...(arabic.products[p.slug] ?? {}), categoryId: cat?.id ?? null, published: true } });
     created++;
   }
   console.log(`Products: ${created} created`);
@@ -483,14 +486,16 @@ async function seedProducts() {
 async function seedClients() {
   const count = await prisma.client.count();
   if (count > 0) return console.log("Clients: already present, skipped");
-  await prisma.client.createMany({ data: clients.map((c) => ({ ...c, published: true })) });
+  await prisma.client.createMany({ data: clients.map((c) => ({ ...c, nameAr: c.nameAr ?? arabic.clients[c.nameEn] ?? null, published: true })) });
   console.log(`Clients: ${clients.length} created`);
 }
 
 async function seedFacility() {
   const count = await prisma.facilityPhoto.count();
   if (count > 0) return console.log("Facility photos: already present, skipped");
-  await prisma.facilityPhoto.createMany({ data: facilityPhotos.map((p) => ({ ...p, published: true })) });
+  await prisma.facilityPhoto.createMany({
+    data: facilityPhotos.map((p) => ({ ...p, captionAr: p.captionAr ?? arabic.facilityCaptions[p.titleEn] ?? null, published: true })),
+  });
   console.log(`Facility photos: ${facilityPhotos.length} created`);
 }
 
@@ -506,7 +511,9 @@ async function seedContent() {
   for (const [index, [key, group, label, textEn, multiline]] of contentBlocks.entries()) {
     const exists = await prisma.contentBlock.findUnique({ where: { key } });
     if (exists) continue;
-    await prisma.contentBlock.create({ data: { key, group, label, textEn, multiline, sortOrder: index } });
+    await prisma.contentBlock.create({
+      data: { key, group, label, textEn, textAr: arabic.contentBlocks[key] ?? null, multiline, sortOrder: index },
+    });
     created++;
   }
   console.log(`Content blocks: ${created} created`);

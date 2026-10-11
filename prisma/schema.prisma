@@ -62,6 +62,7 @@ model Product {
   sizes              String?
   standard           String?
   material           String?
+  materialAr         String?
   shortDescriptionEn String?
   shortDescriptionAr String?
   descriptionEn      String?
@@ -155,6 +156,13 @@ model SiteSettings {
   linkedinUrl       String?
   /// Where new inquiry notifications are emailed (needs SMTP env vars).
   notifyEmail       String?
+  /// Header and footer logos uploaded through Settings; null means the built-in logo files.
+  headerLogoUrl     String?
+  headerLogoWidth   Int?
+  headerLogoHeight  Int?
+  footerLogoUrl     String?
+  footerLogoWidth   Int?
+  footerLogoHeight  Int?
   updatedAt         DateTime @updatedAt
 }
 

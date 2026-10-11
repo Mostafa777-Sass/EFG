@@ -21,6 +21,7 @@ export async function saveProduct(id: string | null, _prev: FormState, formData:
     sizes: str(formData, "sizes"),
     standard: str(formData, "standard"),
     material: str(formData, "material"),
+    materialAr: str(formData, "materialAr"),
     shortDescriptionEn: str(formData, "shortDescriptionEn"),
     shortDescriptionAr: str(formData, "shortDescriptionAr"),
     descriptionEn: str(formData, "descriptionEn"),

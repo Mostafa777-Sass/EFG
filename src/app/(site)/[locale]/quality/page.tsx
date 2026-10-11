@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates } from "@/i18n/alternates";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BadgeCheck, CircleCheck, Quote } from "lucide-react";
 import { getCertifications, getContentPicker, getSettings } from "@/lib/content";
@@ -16,7 +17,7 @@ const TESTS = ["sample", "pressure", "tensile", "pneumatic", "chemical", "pull"]
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "quality" });
-  return { title: t("title") };
+  return { title: t("title"), alternates: await localeAlternates("/quality") };
 }
 
 export default async function QualityPage({ params }: Props) {

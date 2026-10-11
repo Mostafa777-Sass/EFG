@@ -1,7 +1,7 @@
 # Egypt Gas Fittings (EGF) website
 
 Corporate website and admin panel for Egypt Gas Fittings, built with Next.js 16, Prisma and SQLite.
-English is live at `/`, Arabic is ready at `/ar` (enable it in the admin once the Arabic text is complete).
+English is the main language at `/`; the Arabic version at `/ar` is complete and is shown to visitors, with its header toggle, once the switch in admin Settings is ticked.
 
 ## Stack
 
@@ -72,18 +72,24 @@ src/proxy.ts              Locale routing for the site, cookie check for /admin
 - **Inquiries**: every contact-form submission with status and internal notes. Optional email notification via SMTP.
 - **Page content**: every headline and paragraph used on the public pages (hero, history, vision, mission, intros, CTA).
 - **Settings**: company names, phones, email, address, Google Maps embed, headline figures, list of standards,
-  social links, notification address, and the Arabic on/off switch.
+  social links, notification address, the header and footer logos (an uploaded file replaces the built-in EGF
+  logo until it is removed again), and the switch that shows the Arabic version and its language toggle.
 
 Structured lists that rarely change (the four production technologies, the six process steps, the six testing
 capabilities, the three pillars) live in `messages/en.json` and `messages/ar.json`.
 
 ## Arabic
 
-The site is Arabic-ready: locale routing, right-to-left layout and Arabic UI strings are in place.
-Every content field has an Arabic twin; empty Arabic fields fall back to English.
-Turn on **Enable the Arabic version** in Settings when the translations are complete. That shows the language
-switcher and adds `/ar` pages to the sitemap. To also redirect Arabic browsers automatically, set
-`localeDetection: true` in `src/i18n/routing.ts`.
+The Arabic version is complete: locale routing, right-to-left layout, Arabic UI strings (`messages/ar.json`) and
+Arabic for every content field. The Arabic of the database content (page texts, product descriptions and
+materials, category descriptions, client names, photo captions) lives in `prisma/arabic-content.mjs`; the seed
+uses it on a fresh install and `pnpm content:update` fills it into an existing database wherever the Arabic
+field is still empty, so Arabic edited in the admin is never overwritten. Empty Arabic fields fall back to
+English.
+
+The language toggle in the header, the `/ar` entries in the sitemap and the `hreflang` links all appear once
+**Show the Arabic version and its language toggle** is ticked in Settings; until then `/ar` can still be opened directly for review.
+To also redirect Arabic browsers automatically, set `localeDetection: true` in `src/i18n/routing.ts`.
 
 ## Images
 

@@ -2,20 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { ImagePlus } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { FieldError } from "./fields";
 
 type Props = {
   label?: string;
+  /** File input name; the "remove" checkbox is named `remove` + the capitalised name. Defaults to `image`. */
+  name?: string;
   currentUrl?: string | null;
   hint?: string;
   error?: string[];
   required?: boolean;
   /** Preview box shape. */
   shape?: "square" | "wide";
+  /** Extra classes for the preview box, e.g. a dark background for a white logo. */
+  previewClassName?: string;
 };
 
-export function ImageField({ label = "Image", currentUrl, hint, error, required, shape = "square" }: Props) {
+export function ImageField({ label = "Image", name = "image", currentUrl, hint, error, required, shape = "square", previewClassName }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
+  const removeName = `remove${name.charAt(0).toUpperCase()}${name.slice(1)}`;
 
   useEffect(() => {
     return () => {
@@ -33,11 +39,11 @@ export function ImageField({ label = "Image", currentUrl, hint, error, required,
       </p>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
         <div
-          className={
-            shape === "wide"
-              ? "flex h-32 w-48 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-mist-200 bg-mist-50"
-              : "flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-mist-200 bg-mist-50"
-          }
+          className={cn(
+            "flex h-32 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-mist-200 bg-mist-50",
+            shape === "wide" ? "w-48" : "w-32",
+            previewClassName,
+          )}
         >
           {shown ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -49,7 +55,7 @@ export function ImageField({ label = "Image", currentUrl, hint, error, required,
         <div className="flex-1 space-y-3">
           <input
             type="file"
-            name="image"
+            name={name}
             accept="image/png,image/jpeg,image/webp,image/avif"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -60,7 +66,7 @@ export function ImageField({ label = "Image", currentUrl, hint, error, required,
           <p className="help">{hint ?? "JPEG, PNG or WebP up to 10 MB. Converted to WebP and resized automatically."}</p>
           {currentUrl && (
             <label className="flex items-center gap-2 text-sm text-ink-700">
-              <input type="checkbox" name="removeImage" className="h-4 w-4 rounded border-mist-300" />
+              <input type="checkbox" name={removeName} className="h-4 w-4 rounded border-mist-300" />
               Remove current image
             </label>
           )}
