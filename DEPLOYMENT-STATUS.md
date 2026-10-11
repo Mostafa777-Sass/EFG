@@ -1,6 +1,6 @@
 # Deployment status and session notes
 
-Last updated: 2026-10-09 (Hostinger deployment done with Claude Code).
+Last updated: 2026-10-11 (second deploy to Hostinger with the content and image changes of 2026-10-10/11).
 No passwords are recorded here on purpose. Keep them in your password manager.
 
 ## 1. Where things stand
@@ -11,7 +11,7 @@ No passwords are recorded here on purpose. Keep them in your password manager.
 | HTTPS | Let's Encrypt certificate via certbot (Nginx plugin). HTTP redirects to HTTPS. Renewal runs from the certbot systemd timer. |
 | Domain | DNS at Dynu. A records for the root and `www` point to 191.218.162.217 (TTL 120 s). |
 | AWS (EC2 + Docker) | Superseded. The instance at 35.156.198.51 was unreachable on 2026-10-09. Stop or terminate it to avoid charges (section 7). |
-| Local code | Clean, committed and pushed (commit `8a644b6` on `main`). |
+| Local code | Clean, committed and pushed (commit `f6cbff7` on `main`), deployed to the VPS on 2026-10-11 and verified over HTTPS (pages, content, image checksums, optimizer output). |
 | GitHub repo | `Mostafa777-Sass/EFG`. Made public on 2026-10-09 so the server could clone it. Switch it back to private after the deploy key is in place (section 4). |
 
 ## 2. Hostinger VPS layout
@@ -33,26 +33,16 @@ No passwords are recorded here on purpose. Keep them in your password manager.
 
 ## 3. Pending wrap-up (run as root unless stated)
 
-- [ ] After the next deploy, once, as `egf` in `/var/www/egf-website`: `rm -rf .next/cache/images && sudo systemctl restart egf-website`.
-      Seven product photos were replaced under their existing names (EGF marking added), the two gas meter
-      union photos were swapped, the expansion bellow photo was replaced, and nine client logos were rebuilt
-      from new source files under their existing names (2026-10-11); Next's image optimizer keeps the old
-      versions cached for hours otherwise.
-- [ ] After the next deploy, once, as `egf` in `/var/www/egf-website`: `pnpm content:update`. It applies the
-      2026-10-10 wording changes to content stored in the database: the hero headline becomes the company name
-      (English and Arabic), and the CTA headline and facility photo titles get Title Case to match
-      `messages/en.json`. Since 2026-10-11 it also deletes the "Steel Hose Nipples & Couplings" product, which
-      EGF confirmed does not exist (the seed no longer creates it), drops "BS 21" from the standards list in
-      Settings, changes the CEO title to "Chief Executive Officer", replaces the two mobile numbers with the
-      single corrected one (+20 106 654 5882), and fills in the Google Maps embed on the Contact page (the Badr
-      City industrial zone; swap in the exact pin from Google Maps "Share > Embed a map" in Settings once EGF
-      provides it), gives the "EGAS Registered" certification its badge image, and moves the SEWA logo ahead of
-      SIANKO in the home page logo band. The three new leaders on the
-      About page are new content blocks that `pnpm db:seed` (part of `deploy/update.sh`) creates by itself. Safe
-      to re-run; it never overwrites admin edits.
+- [x] Done 2026-10-11 after the deploy: `pnpm content:update` (8 database changes: steel hose product deleted,
+      BS 21 dropped, CEO title, mobile number and map embed, SEWA ahead of SIANKO, EGAS badge; the script
+      documents each step and is safe to re-run), then the image cache clear and a restart. For the next image
+      replaced under an existing name, clear both cache folders, because the standalone server keeps its own:
+      as `egf`: `rm -rf .next/cache/images .next/standalone/.next/cache/images`, then `systemctl restart egf-website`.
+- [ ] Contact page map: the pin is Google's "Badr industrial zone" place, not plot 25B. Replace it in Settings with
+      the "Share > Embed a map" URL of the exact location once EGF provides it.
 - [ ] Server firewall was inactive on 2026-10-09. Enable it:
       `ufw allow OpenSSH && ufw allow 80/tcp && ufw allow 443/tcp && ufw enable` (answer `y`), then `ufw status`.
-- [ ] Sudo rule check: `visudo -cf /etc/sudoers.d/egf`. If the file is missing:
+- [x] Sudo rule verified 2026-10-11 (`visudo -cf /etc/sudoers.d/egf` printed "parsed OK"). If it ever goes missing:
       `echo 'egf ALL=(root) NOPASSWD: /usr/bin/systemctl * egf-website' > /etc/sudoers.d/egf && chmod 440 /etc/sudoers.d/egf`
 - [ ] Deploy key (section 4), then set the GitHub repo back to private.
 - [ ] Nightly backup cron (section 5).
@@ -75,6 +65,10 @@ Every later update: commit and push on the PC, then on the VPS as `egf`:
 ```bash
 cd /var/www/egf-website && ./deploy/update.sh
 ```
+
+From a root session the same thing is `su - egf -c "cd /var/www/egf-website && bash deploy/update.sh"`.
+The script had no executable bit in git until 2026-10-11 (it was committed from Windows), so on a checkout
+from before that, run it through `bash` as above.
 
 It pulls, installs, applies migrations, seeds missing rows, rebuilds and restarts the service.
 After editing `.env` on the server: `sudo systemctl restart egf-website`. A change to `NEXT_PUBLIC_SITE_URL`
